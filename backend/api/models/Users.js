@@ -32,6 +32,10 @@ module.exports = {
       type: 'string',
       size: 50
     },
+    user_phone:{
+      type:'string',
+      size:15
+    },
     user_sex: {
       type: 'string',
       size: 6,

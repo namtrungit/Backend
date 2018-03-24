@@ -29,7 +29,7 @@ module.exports.policies = {
   'UsersController':{
     '*': 'auth', // tất cả các controller phải thỏa mãn policies auth
     'user_create':true,
-    'user_delete' : true
+    'login':true,
   }
 
 

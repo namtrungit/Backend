@@ -96,6 +96,7 @@ module.exports = {
     },
     user_profile: function (req, res) {
         var user_id = req.headers.authID;
+        console.log(user_id);
         if (!user_id || user_id === "") {
             return res.json({
                 status: 'error',
@@ -128,6 +129,7 @@ module.exports = {
             user_birthday = req.param('user_birthday'),
             user_address = req.param('user_address'),
             user_sex = req.param('user_sex'),
+            user_phone = req.param('user_phone'),
             user_position = req.param('user_position')
         if (!user_id || user_id === "") {
             return res.json({
@@ -146,6 +148,7 @@ module.exports = {
                         user_birthday: user_birthday,
                         user_address: user_address,
                         user_sex: user_sex,
+                        user_phone:user_phone,
                         user_position: user_position
                     }).exec(function (err, updated) {
                         if (err) {
@@ -167,6 +170,7 @@ module.exports = {
                         user_birthday: user_birthday,
                         user_address: user_address,
                         user_sex: user_sex,
+                        user_phone:user_phone,
                         user_position: user_position
                     }).exec(function (err, updated) {
                         if (err) {
@@ -195,6 +199,7 @@ module.exports = {
                         user_birthday: user_birthday,
                         user_address: user_address,
                         user_sex: user_sex,
+                        user_phone:user_phone,
                         user_position: user_position
                     }).exec(function (err, updated) {
                         if (err) {
