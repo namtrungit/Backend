@@ -32,11 +32,13 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
+  //USERS CONTROLLER
   "POST /users/user": "UsersController.user_create",
   'POST /users/login': 'UsersController.login',
   'GET /users/user': 'UsersController.user_profile',
   'PUT /users/user': 'UsersController.user_update',
-  'DELETE /users/user': 'UsersController.user_delete'
+  'DELETE /users/user': 'UsersController.user_delete',
+  'PUT /users/changepass': 'UsersController.user_change_password'
 
   /***************************************************************************
   *                                                                          *
