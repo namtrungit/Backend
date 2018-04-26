@@ -38,7 +38,56 @@ module.exports.routes = {
   'GET /users/user': 'UsersController.user_profile',
   'PUT /users/user': 'UsersController.user_update',
   'DELETE /users/user': 'UsersController.user_delete',
-  'PUT /users/changepass': 'UsersController.user_change_password'
+  'PUT /users/changepass': 'UsersController.user_change_password',
+
+  //STUDENTS CONTROLLER
+  "POST /students/student": "StudentsController.stu_create",
+  "PUT /students/update-student": "StudentsController.stu_update",
+  "DELETE /students/del-student": "StudentsController.stu_del",
+  "GET /students/student": "StudentsController.stu_list",
+  "POST /students/upload-avatar": "StudentsController.stu_upload_avatar",
+  "GET /students/student-room": "StudentsController.stu_list_in_room",
+  "POST /students/pick-room": "StudentsController.pick_room",
+  "PUT /students/swap-room": "StudentsController.swap_room",
+  "PUT /students/end-room": "StudentsController.end_room",
+
+  //Faculties controller
+  "POST /faculties/faculty": "FacultiesController.fal_create",
+  "GET /faculties/faculty": "FacultiesController.fal_get",
+  "DELETE /faculties/del-faculty": "FacultiesController.fal_del",
+
+  //Rooms Controller
+  "POST /rooms/room": "RoomsController.add_Room",
+  "GET /rooms/room": "RoomsController.list_room",
+  "DELETE /rooms/del-room": "RoomsController.del_room",
+  "PUT /rooms/update-room": "RoomsController.update_room",
+  "GET /rooms/find-room": "RoomsController.find_room",
+
+  //Areas Controller
+  "POST /areas/area": "AreasController.add_area",
+  "DELETE /areas/del-area": "AreasController.del_area",
+  "GET /areas/area": "AreasController.get_area",
+  "PUT /areas/update-area": "AreasController.update_area",
+
+  //Classes Controller
+  "POST /classes/class": "ClassesController.add_class",
+  "DELETE /classes/del-class": "ClassesController.del_class",
+  "PUT /classes/update-class": "ClassesController.update_class",
+  "GET /classes/class": "ClassesController.list_class",
+
+  //Floors Controller
+  "POST /floors/floor": "FloorsController.add_floor",
+  "DELETE /floors/del-floor": "FloorsController.del_floor",
+  "GET /floors/floor": "FloorsController.list_floor",
+
+  //AF Details Controller
+  "POST /afds/afd":"AreafloordetailsController.add_afd",
+  "DELETE /afds/del-afd":"AreafloordetailsController.del_afd",
+  "PUT /afds/update-afd":"AreafloordetailsController.update_afd",
+  "GET /afds/afd":"AreafloordetailsController.list_afd",
+  "GET /afds/afdByAreaId":"AreafloordetailsController.list_afdByAreaId",
+
+
 
   /***************************************************************************
   *                                                                          *

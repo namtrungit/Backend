@@ -11,7 +11,7 @@ module.exports = {
     user_create: function (req, res) {
         var user_email = req.param('user_email');
         var user_password = req.param('user_password');
-        if (!user_email || user_email === null) {
+        if (!user_email || user_email === '') {
             return res.json({
                 status: 'error',
                 message: 'Bạn chưa nhập email'
