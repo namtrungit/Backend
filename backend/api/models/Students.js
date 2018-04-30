@@ -64,8 +64,9 @@ module.exports = {
     stu_avatar: {
       type: 'string'
     },
-    stu_id_room: {
-      type: 'integer'
+    stu_room_name: {
+      type:'string',
+      size:20
     }
   }
 };

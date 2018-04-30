@@ -130,7 +130,7 @@ module.exports = {
                     stu_mom_phone,
                     stu_id_class,
                     stu_avatar,
-                    stu_id_room: 0
+                    stu_room_name: ''
                 }).exec(function (err, created) {
                     if (err) {
                         console.log(err);
@@ -318,14 +318,14 @@ module.exports = {
     },
     stu_del: function (req, res) {
         var stu_id = req.param('stu_id'),
-            room_id = req.param('room_id'), room_empty;
+            room_name = req.param('room_name'), room_empty;
         if (!stu_id || stu_id === "" || stu_id < 1) {
             return res.json({
                 status: 'error',
                 message: 'stu_id không hợp lệ'
             })
         }
-        if (room_id == 0) {
+        if (room_name === '') {
             // Không có room_id
             console.log('Không có room_id')
             // return;
@@ -351,9 +351,9 @@ module.exports = {
         else {
             // Có room_id
             console.log('Có room_id');
-            console.log(room_id);
+            console.log(room_name);
             // return;
-            Rooms.findOne({ room_id }).exec(function (err, find) {
+            Rooms.findOne({ room_name }).exec(function (err, find) {
                 if (err) {
                     console.log(err);
                     return;
@@ -377,7 +377,7 @@ module.exports = {
                                     status: 'success',
                                     message: 'Xóa sinh viên thành công'
                                 })
-                                Rooms.update({ room_id }, { room_empty }).exec(function (err, updated) {
+                                Rooms.update({ room_name }, { room_empty }).exec(function (err, updated) {
                                     if (err) {
                                         console.log(err);
                                         return;
@@ -395,7 +395,7 @@ module.exports = {
 
     },
     stu_list: function (req, res) {
-        var sql = "SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,'%d/%m/%Y') as stu_birthday,students.stu_id_room,students.stu_id_class, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name,rooms.room_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id LEFT JOIN rooms on students.stu_id_room = rooms.room_id, faculties WHERE faculties.fal_id = classes.class_id_faculty"
+        var sql = "SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,'%d/%m/%Y') as stu_birthday,students.stu_room_name,students.stu_id_class, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name,rooms.room_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id LEFT JOIN rooms on students.stu_room_name = rooms.room_name, faculties WHERE faculties.fal_id = classes.class_id_faculty"
         Students.query(sql, function (err, results) {
             if (err) {
                 return console.log(err);
@@ -411,7 +411,7 @@ module.exports = {
     },
     stu_list_in_room: function (req, res) {
         var room_id = req.param('room_id')
-        var sql = 'SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,"%d/%m/%Y") as stu_birthday, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name,rooms.room_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id LEFT JOIN rooms on students.stu_id_room = rooms.room_id, faculties WHERE faculties.fal_id = classes.class_id_faculty and rooms.room_id = ' + room_id + '';
+        var sql = 'SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,"%d/%m/%Y") as stu_birthday, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name,rooms.room_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id LEFT JOIN rooms on students.stu_room_name = rooms.room_name, faculties WHERE faculties.fal_id = classes.class_id_faculty and  rooms.room_id = ' + room_id + '';
         Students.query(sql, function (err, results) {
             if (err) {
                 return console.log(err);
@@ -442,21 +442,9 @@ module.exports = {
     },
     pick_room: function (req, res) {
         var stu_id = req.param('stu_id'),
-            room_id = req.param('room_id'),
+            room_name = req.param('room_name'),
             room_empty,
-            area_sex,
-            sql = 'SELECT areas.area_sex FROM rooms LEFT JOIN areas ON rooms.room_id_area = areas.area_id WHERE room_id = ' + room_id + '';
-        Rooms.query(sql, function (err, results) {
-            if (err) {
-                console.log(err);
-                reuturn;
-            }
-            if (results) {
-                area_sex = results[0].area_sex;
-                // console.log(results);
-            }
-            console.log(area_sex);
-        })
+            area_sex;
         if (!stu_id || stu_id === '' || stu_id < 1) {
             res.json({
                 status: 'error',
@@ -464,107 +452,114 @@ module.exports = {
             })
             return;
         }
-        if (!room_id || room_id === '' || room_id < 1) {
+        if (!room_name || room_name === '') {
             res.json({
                 status: 'error',
-                message: 'room_id không hợp lệ'
+                message: 'room_name không hợp lệ'
             })
             return;
         }
-        // Tìm phòng theo roon_id
-        Rooms.findOne({ room_id }).exec(function (err, find) {
+        Rooms.findOne({ room_name }).exec(function (err, find) {
             if (err) {
                 console.log(err);
                 return;
             }
-            //Phòng hết chỗ
-            if (find.room_empty === 0) {
-                res.json({
-                    status: 'warning',
-                    message: 'Phòng này không còn chỗ trống'
-                })
-                return;
-            }
             if (find) {
-                console.log(find);
-                room_empty = find.room_empty;
-            }
-            room_empty--;
-            Students.findOne({ stu_id }).exec(function (err, find) {
-                if (err) {
-                    console.log(err);
+                if (find.room_empty === 0) {
+                    res.json({
+                        status: 'warning',
+                        message: 'Phòng này không còn chỗ trống'
+                    })
                     return;
                 }
-                if (find) {
-                    if (find.stu_id_room !== 0) {
-                        res.json({
-                            status: 'warning',
-                            message: 'Sinh viên này đã có phòng rồi'
-                        })
-                        return;
-                    } else {
-                        // Thiếu kiểm tra khu đó có cùng giới tính vs sinh viên hay không
-                        if (find.stu_sex != area_sex) {
-                            res.json({
-                                status: 'warning sex',
-                                message: 'Sai giới tính khu'
-                            })
+                else if (find.room_empty !== 0) {
+                    room_empty = find.room_empty;
+                    room_empty--;
+                    // console.log(room_empty);
+                    sql = 'SELECT areas.area_sex FROM rooms LEFT JOIN areas ON rooms.room_id_area = areas.area_id WHERE room_name = "' + room_name + '"';
+                    Rooms.query(sql, function (err, results) {
+                        if (err) {
+                            console.log(err);
                             return;
                         }
-                        else {
-                            Students.update({ stu_id }, { stu_id_room: room_id }).exec(function (err, updated) {
+                        if (results) {
+                            area_sex = results[0].area_sex;
+                            // console.log(area_sex);
+                            Students.findOne({ stu_id }).exec(function (err, find) {
                                 if (err) {
                                     console.log(err);
                                     return;
                                 }
-                                if (updated) {
+                                if (!find) {
                                     res.json({
-                                        status: 'success',
-                                        message: 'Chọn phòng cho sinh viên thành công'
+                                        status: 'warning stu_id undefined',
+                                        message: 'Không tìm thấy ID của sinh viên bạn nhập vào'
                                     })
-                                    Rooms.update({ room_id }, { room_empty }).exec(function (err, updated) {
+                                    return;
+                                }
+                                if (find.stu_sex != area_sex) {
+                                    res.json({
+                                        status: 'warning sex',
+                                        message: 'Sai giới tính khu'
+                                    })
+                                    return;
+                                }
+                                if (find.stu_room_name !== '') {
+                                    res.json({
+                                        status: 'warning',
+                                        message: 'Sinh viên này đã có phòng rồi'
+                                    })
+                                    return;
+                                }
+                                else {
+                                    Students.update({ stu_id }, { stu_room_name: room_name }).exec(function (err, updated) {
                                         if (err) {
                                             console.log(err);
                                             return;
                                         }
                                         if (updated) {
-                                            console.log(updated)
-                                            return;
+                                            res.json({
+                                                status: 'success',
+                                                message: 'Chọn phòng cho sinh viên thành công'
+                                            })
+                                            Rooms.update({ room_name }, { room_empty }).exec(function (err, updated) {
+                                                if (err) {
+                                                    console.log(err);
+                                                    return;
+                                                }
+                                                if (updated) {
+                                                    console.log(updated)
+                                                    return;
+                                                }
+                                            })
                                         }
                                     })
                                 }
                             })
                         }
-                    }
-                }
-                else {
-                    res.json({
-                        status: 'error',
-                        message: 'Không tìm thấy stu_id'
                     })
                 }
-            })
+            } else {
+                res.json({
+                    status: 'warning find room',
+                    message: 'Ký túc xá hiện không có phòng ' + room_name
+                })
+            }
         })
-
     },
     swap_room: function (req, res) {
         var stu_id = req.param('stu_id'),
-            old_room_id = req.param('old_room_id'),
-            new_room_id = req.param('new_room_id'),
+            old_room_name = req.param('old_room_name'),
+            new_room_name = req.param('new_room_name'),
             old_room_empty, new_room_empty,
-            area_sex,
-            sql = 'SELECT areas.area_sex FROM rooms LEFT JOIN areas ON rooms.room_id_area = areas.area_id WHERE room_id = ' + new_room_id + '';
-        Rooms.query(sql, function (err, results) {
-            if (err) {
-                console.log(err);
-                reuturn;
-            }
-            if (results) {
-                area_sex = results[0].area_sex;
-                // console.log(results);
-            }
-            console.log(area_sex);
-        })
+            area_sex;
+        if (new_room_name === old_room_name) {
+            res.json({
+                status: 'same',
+                message: 'Sinh viên này hiện đang ở phòng '+new_room_name
+            })
+            return;
+        }
         if (!stu_id || stu_id === '' || stu_id < 1) {
             res.json({
                 status: 'error',
@@ -572,22 +567,21 @@ module.exports = {
             })
             return;
         }
-        if (!old_room_id || old_room_id === '' || old_room_id < 1) {
+        if (!old_room_name || old_room_name === '') {
             res.json({
-                status: 'error',
-                message: 'old_room_id không hợp lệ'
+                status: 'warning stu cant swap',
+                message: 'Sinh viên này chưa có phòng không thể sử dụng chức năng này'
             })
             return;
         }
-        if (!new_room_id || new_room_id === '' || new_room_id < 1) {
+        if (!new_room_name || new_room_name === '') {
             res.json({
                 status: 'error',
-                message: 'new_room_id không hợp lệ'
+                message: 'new_room_name không hợp lệ'
             })
             return;
         }
-        //Tìm số lượng trống ở ở phòng cũ
-        Rooms.findOne({ room_id: old_room_id }).exec(function (err, find) {
+        Rooms.findOne({ room_name: old_room_name }).exec(function (err, find) {
             if (err) {
                 console.log(err);
                 return;
@@ -595,12 +589,11 @@ module.exports = {
             if (find) {
                 // console.log(find);
                 old_room_empty = find.room_empty;
+                old_room_empty++;
+                // console.log(old_room_empty);
             }
-            old_room_empty++;
-            // console.log(old_room_empty);
         })
-        //Tìm số lượng trống ở ở phòng mới
-        Rooms.findOne({ room_id: new_room_id }).exec(function (err, find) {
+        Rooms.findOne({ room_name: new_room_name }).exec(function (err, find) {
             if (err) {
                 console.log(err);
                 return;
@@ -608,70 +601,96 @@ module.exports = {
             if (find) {
                 // console.log(find);
                 new_room_empty = find.room_empty;
-            }
-            //Kiểm tra nếu phòng mới empty = 0 
-            if (find.room_empty === 0) {
-                res.json({
-                    status: 'warning',
-                    message: 'Phòng này không còn chỗ trống'
-                })
-                return;
-            }
-            new_room_empty--;
-            // console.log(new_room_empty);
-            //Tìm sinh viên theo id
-            Students.findOne({ stu_id }).exec(function (err, find) {
-                if (err) {
-                    console.log(err);
-                    reuturn;
+                new_room_empty--;
+                if (find.room_empty === 0) {
+                    res.json({
+                        status: 'warning',
+                        message: 'Phòng này không còn chỗ trống'
+                    })
+                    return;
                 }
-                if (find) {
-                    // Thiếu kiểm tra khu đó có cùng giới tính vs sinh viên hay không
-                    if (find.stu_sex != area_sex) {
-                        res.json({
-                            status: 'warning sex',
-                            message: 'Sai giới tính khu'
-                        })
+                // console.log(new_room_empty);  
+                //Kiểm tra giới tính
+                sql = 'SELECT areas.area_sex FROM rooms LEFT JOIN areas ON rooms.room_id_area = areas.area_id WHERE room_name = "' + new_room_name + '"';
+                Rooms.query(sql, function (err, results) {
+                    if (err) {
+                        console.log(err);
                         return;
-                    } else {
-                        Students.update({ stu_id }, { stu_id_room: new_room_id }).exec(function (err, updated) {
+                    }
+                    if (results) {
+                        area_sex = results[0].area_sex;
+                        // console.log(area_sex);
+                        Students.findOne({ stu_id }).exec(function (err, find) {
+
                             if (err) {
                                 console.log(err);
+                                reuturn;
+                            }
+                            if (!find) {
+                                res.json({
+                                    status: 'warning stu_id undefined',
+                                    message: 'Không tìm thấy ID của sinh viên bạn nhập vào'
+                                })
                                 return;
                             }
-                            if (updated) {
-                                res.json({
-                                    status: 'success',
-                                    message: 'Thay đổi phòng cho sinh viên thành công'
-                                })
-                                Rooms.update({ room_id: old_room_id }, { room_empty: old_room_empty }).exec(function (err, updated) {
-                                    if (err) {
-                                        console.log(err);
-                                        return;
-                                    }
-                                    if (updated) {
-                                        return console.log(updated);
-                                    }
-                                })
-                                Rooms.update({ room_id: new_room_id }, { room_empty: new_room_empty }).exec(function (err, updated) {
-                                    if (err) {
-                                        console.log(err);
-                                        return;
-                                    }
-                                    if (updated) {
-                                        return console.log(updated);
-                                    }
-                                })
+                            if (find) {
+                                // Thiếu kiểm tra khu đó có cùng giới tính vs sinh viên hay không
+                                if (find.stu_sex != area_sex) {
+                                    res.json({
+                                        status: 'warning sex',
+                                        message: 'Sai giới tính khu'
+                                    })
+                                    return;
+                                }
+                                else {
+                                    Students.update({ stu_id }, { stu_room_name: new_room_name }).exec(function (err, updated) {
+                                        if (err) {
+                                            console.log(err);
+                                            return;
+                                        }
+                                        if (updated) {
+                                            res.json({
+                                                status: 'success',
+                                                message: 'Thay đổi phòng cho sinh viên thành công'
+                                            })
+                                            Rooms.update({ room_name: old_room_name }, { room_empty: old_room_empty }).exec(function (err, updated) {
+                                                if (err) {
+                                                    console.log(err);
+                                                    return;
+                                                }
+                                                if (updated) {
+                                                    return console.log(updated);
+                                                }
+                                            })
+                                            Rooms.update({ room_name: new_room_name }, { room_empty: new_room_empty }).exec(function (err, updated) {
+                                                if (err) {
+                                                    console.log(err);
+                                                    return;
+                                                }
+                                                if (updated) {
+                                                    return console.log(updated);
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
                             }
                         })
                     }
-                }
-            })
+                })
+            }
+            else {
+                res.json({
+                    status: 'warning find room',
+                    message: 'Ký túc xá hiện không có phòng ' + new_room_name
+                })
+                return;
+            }
         })
     },
     end_room: function (req, res) {
         var stu_id = req.param('stu_id'),
-            room_id = req.param('room_id'), room_empty;
+            room_name = req.param('room_name'), room_empty;
         if (!stu_id || stu_id === '') {
             res.json({
                 status: 'error',
@@ -679,14 +698,14 @@ module.exports = {
             })
             return;
         }
-        if (!room_id || room_id === '') {
+        if (!room_name || room_name === '') {
             res.json({
                 status: 'error',
-                message: 'room_id không hợp lệ'
+                message: 'room_name không hợp lệ'
             })
             return;
         }
-        Rooms.findOne({ room_id }).exec(function (err, find) {
+        Rooms.findOne({ room_name }).exec(function (err, find) {
             if (err) {
                 console.log(err);
                 return;
@@ -701,7 +720,7 @@ module.exports = {
                         return;
                     }
                     if (find) {
-                        Students.update({ stu_id }, { stu_id_room: 0 }).exec(function (err, updated) {
+                        Students.update({ stu_id }, { stu_room_name: '' }).exec(function (err, updated) {
                             if (err) {
                                 console.log(err);
                                 return;
@@ -711,7 +730,7 @@ module.exports = {
                                     status: 'success',
                                     message: 'Xóa sinh viên khỏi phòng thành công'
                                 })
-                                Rooms.update({ room_id }, { room_empty }).exec(function (err, updated) {
+                                Rooms.update({ room_name }, { room_empty }).exec(function (err, updated) {
                                     if (err) {
                                         console.log(err);
                                         return;
@@ -725,6 +744,45 @@ module.exports = {
                         })
                     }
                 })
+            }
+        })
+    },
+    search_stu: function (req, res) {
+        var stu_id_school = req.param('stu_id_school'),
+            stu_name = req.param('stu_name'),
+            sql;
+        if (!stu_id_school && stu_name) {
+            // console.log(1);
+            sql = "SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,'%d/%m/%Y') as stu_birthday,students.stu_room_name,students.stu_id_class, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name,rooms.room_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id LEFT JOIN rooms on students.stu_room_name = rooms.room_name, faculties WHERE faculties.fal_id = classes.class_id_faculty AND students.stu_name LIKE '%" + stu_name + "%'";
+        }
+        else if (!stu_name && stu_id_school) {
+            // console.log(2);
+            sql = "SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,'%d/%m/%Y') as stu_birthday,students.stu_room_name,students.stu_id_class, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name,rooms.room_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id LEFT JOIN rooms on students.stu_room_name = rooms.room_name, faculties WHERE faculties.fal_id = classes.class_id_faculty AND students.stu_id_school = " + stu_id_school + "";
+        }
+        else if (!stu_id_school && !stu_name) {
+            res.json({
+                status: 'warning',
+                message: 'Bạn chưa điền thông tin để tìm kiếm'
+            })
+            // console.log(3);
+            return;
+        }
+        else {
+            // console.log(4);
+            sql = "SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,'%d/%m/%Y') as stu_birthday,students.stu_room_name,students.stu_id_class, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name,rooms.room_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id LEFT JOIN rooms on students.stu_room_name = rooms.room_name, faculties WHERE faculties.fal_id = classes.class_id_faculty AND students.stu_name LIKE '%" + stu_name + "%' and students.stu_id_school = " + stu_id_school + "";
+        }
+        Students.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status: 'success',
+                    message: 'GET list_stu tìm kiếm thành công',
+                    list: results
+                })
+                return;
             }
         })
     }

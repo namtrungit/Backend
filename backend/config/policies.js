@@ -36,7 +36,7 @@ module.exports.policies = {
   },
   'StudentsController': {
     '*': 'auth',
-    'stu_upload_avatar':true
+    'stu_upload_avatar': true
   },
   'RoomsController': {
     '*': 'auth',
@@ -55,7 +55,13 @@ module.exports.policies = {
   },
   'AreafloordetailsController': {
     '*': 'auth',
-  }
+  },
+  'ContractregulationsController': {
+    '*': 'auth',
+  },
+  'ContractsController': {
+    '*': 'auth',
+  },
 
   /***************************************************************************
   *                                                                          *

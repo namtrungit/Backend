@@ -50,6 +50,7 @@ module.exports.routes = {
   "POST /students/pick-room": "StudentsController.pick_room",
   "PUT /students/swap-room": "StudentsController.swap_room",
   "PUT /students/end-room": "StudentsController.end_room",
+  "POST /students/search-stu":"StudentsController.search_stu",
 
   //Faculties controller
   "POST /faculties/faculty": "FacultiesController.fal_create",
@@ -62,6 +63,7 @@ module.exports.routes = {
   "DELETE /rooms/del-room": "RoomsController.del_room",
   "PUT /rooms/update-room": "RoomsController.update_room",
   "GET /rooms/find-room": "RoomsController.find_room",
+  "POST /rooms/type-room": "RoomsController.find_room_s",
 
   //Areas Controller
   "POST /areas/area": "AreasController.add_area",
@@ -86,6 +88,21 @@ module.exports.routes = {
   "PUT /afds/update-afd":"AreafloordetailsController.update_afd",
   "GET /afds/afd":"AreafloordetailsController.list_afd",
   "GET /afds/afdByAreaId":"AreafloordetailsController.list_afdByAreaId",
+
+  
+  //recontract Contractregulations Controller
+  "POST /recs/rec":"ContractregulationsController.add_recontract",
+  "PUT /recs/update-rec":"ContractregulationsController.update_recontract",
+  "DELETE /recs/del-rec":"ContractregulationsController.del_recontract",
+  "GET /recs/rec":"ContractregulationsController.list_recontract",
+  "GET /recs/rec-enable":"ContractregulationsController.list_recontract_enable",
+
+  //Contract Controller
+  "POST /contracts/contract":"ContractsController.add_contract",
+  "DELETE /contracts/del-contract":"ContractsController.del_contract",
+  "PUT /contracts/update-contract":"ContractsController.update_contract",
+  "GET /contracts/list-contract":"ContractsController.list_contract",
+
 
 
 

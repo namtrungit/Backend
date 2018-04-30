@@ -11,7 +11,7 @@ module.exports = {
             room_max = req.param('room_max'),
             room_id_area = req.param('room_id_area'),
             room_id_floor = req.param('room_id_floor')
-            room_empty = room_max;
+        room_empty = room_max;
         if (!room_name || room_name === '') {
             res.json({
                 status: 'error',
@@ -40,11 +40,11 @@ module.exports = {
             })
             return;
         }
-        Rooms.create({ room_name, room_max, room_empty,room_id_area, room_id_floor }).exec(function (err, created) {
+        Rooms.create({ room_name, room_max, room_empty, room_id_area, room_id_floor }).exec(function (err, created) {
             if (err) {
                 res.json({
                     status: 'warning',
-                    message: 'Đã có phòng '+room_name+' trong danh sách',
+                    message: 'Đã có phòng ' + room_name + ' trong danh sách',
                 })
             }
             if (created) {
@@ -136,39 +136,56 @@ module.exports = {
             return;
         }
         Rooms.findOne({ room_id }).exec(function (err, find) {
-            if(err){
+            if (err) {
                 console.log(err);
                 return;
             }
-            if(find){
-                Rooms.destroy({room_id}).exec(function(err){
-                    if(err){
+            if (find) {
+                Rooms.destroy({ room_id }).exec(function (err) {
+                    if (err) {
                         console.log(err);
                         return;
                     }
                     res.json({
-                        status:'success',
-                        message:'Xóa thành công'
+                        status: 'success',
+                        message: 'Xóa thành công'
                     })
                     return;
                 })
             }
         })
     },
-    list_room: function(req,res){
+    list_room: function (req, res) {
         var sql = 'SELECT rooms.room_id, rooms.room_name, rooms.room_max,rooms.room_empty,areas.area_sympol, areas.area_id,floors.floor_id, areafloordetails.af_price as price FROM rooms LEFT JOIN areas on rooms.room_id_area = areas.area_id LEFT JOIN floors on rooms.room_id_floor = floors.floor_id, areafloordetails WHERE areafloordetails.af_area_id = areas.area_id and areafloordetails.af_floor_id = floors.floor_id';
-        Rooms.query(sql,function(err,results){
+        Rooms.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status: 'success',
+                    message: 'GET list_room thành công',
+                    Rooms: results
+                })
+            }
+        })
+    },
+    find_room_s: function (req, res) {
+        var room_name_s = req.param('room_name_s')
+        sql = "SELECT rooms.room_id, rooms.room_name FROM rooms WHERE rooms.room_name LIKE '" + room_name_s + "%'";
+        Rooms.query(sql, function(err,results){
             if(err){
                 console.log(err);
                 return;
             }
-            if(results)
-            {
+            if(results){
                 res.json({
                     status:'success',
-                    message:'GET list_room thành công',
-                    Rooms: results
+                    message:'GET danh sách theo textbox thành công',
+                    Rooms: results 
                 })
+                return;
             }
         })
     },
