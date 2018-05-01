@@ -50,7 +50,7 @@ module.exports.routes = {
   "POST /students/pick-room": "StudentsController.pick_room",
   "PUT /students/swap-room": "StudentsController.swap_room",
   "PUT /students/end-room": "StudentsController.end_room",
-  "POST /students/search-stu":"StudentsController.search_stu",
+  "POST /students/search-stu": "StudentsController.search_stu",
 
   //Faculties controller
   "POST /faculties/faculty": "FacultiesController.fal_create",
@@ -83,25 +83,37 @@ module.exports.routes = {
   "GET /floors/floor": "FloorsController.list_floor",
 
   //AF Details Controller
-  "POST /afds/afd":"AreafloordetailsController.add_afd",
-  "DELETE /afds/del-afd":"AreafloordetailsController.del_afd",
-  "PUT /afds/update-afd":"AreafloordetailsController.update_afd",
-  "GET /afds/afd":"AreafloordetailsController.list_afd",
-  "GET /afds/afdByAreaId":"AreafloordetailsController.list_afdByAreaId",
+  "POST /afds/afd": "AreafloordetailsController.add_afd",
+  "DELETE /afds/del-afd": "AreafloordetailsController.del_afd",
+  "PUT /afds/update-afd": "AreafloordetailsController.update_afd",
+  "GET /afds/afd": "AreafloordetailsController.list_afd",
+  "GET /afds/afdByAreaId": "AreafloordetailsController.list_afdByAreaId",
 
-  
+
   //recontract Contractregulations Controller
-  "POST /recs/rec":"ContractregulationsController.add_recontract",
-  "PUT /recs/update-rec":"ContractregulationsController.update_recontract",
-  "DELETE /recs/del-rec":"ContractregulationsController.del_recontract",
-  "GET /recs/rec":"ContractregulationsController.list_recontract",
-  "GET /recs/rec-enable":"ContractregulationsController.list_recontract_enable",
+  "POST /recs/rec": "ContractregulationsController.add_recontract",
+  "PUT /recs/update-rec": "ContractregulationsController.update_recontract",
+  "DELETE /recs/del-rec": "ContractregulationsController.del_recontract",
+  "GET /recs/rec": "ContractregulationsController.list_recontract",
+  "GET /recs/rec-enable": "ContractregulationsController.list_recontract_enable",
 
   //Contract Controller
-  "POST /contracts/contract":"ContractsController.add_contract",
-  "DELETE /contracts/del-contract":"ContractsController.del_contract",
-  "PUT /contracts/update-contract":"ContractsController.update_contract",
-  "GET /contracts/list-contract":"ContractsController.list_contract",
+  "POST /contracts/contract": "ContractsController.add_contract",
+  "DELETE /contracts/del-contract": "ContractsController.del_contract",
+  "PUT /contracts/update-contract": "ContractsController.update_contract",
+  "GET /contracts/list-contract": "ContractsController.list_contract",
+
+  //Register Controller
+  "POST /registers/register": "RegistersController.add_register",
+  "PUT /registers/disable-register": "RegistersController.disable_register",
+  "DELETE /registers/del-register": "RegistersController.del_register",
+  "DELETE /registers/del-all": "RegistersController.del_all",
+  "GET /registers/list-disable": "RegistersController.list_disable",
+  "GET /registers/list-enable": "RegistersController.list_enable",
+
+  //Test send-email
+  "POST /emails/email": "EmailsController.create"
+
 
 
 

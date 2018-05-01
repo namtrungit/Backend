@@ -62,6 +62,10 @@ module.exports.policies = {
   'ContractsController': {
     '*': 'auth',
   },
+  'RegistersController': {
+    '*': 'auth',
+    'add_register': true
+  }
 
   /***************************************************************************
   *                                                                          *
