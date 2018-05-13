@@ -19,6 +19,9 @@ module.exports = {
     bill_create_name: {
       type: 'string',
       size:30
+    },
+    bill_total: {
+      type: 'integer'
     }
   }
 };

@@ -45,7 +45,7 @@ module.exports = {
                     if (created) {
                         res.json({
                             status: 'success',
-                            message: 'Lập hóa đơn thành công',
+                            message: 'Thêm hóa đơn thành công',
                             bill: created
                         })
                     }
@@ -57,6 +57,45 @@ module.exports = {
                     message: 'Mã số sinh viên ' + bill_stu_id + ' không có trong cơ sở dữ liệu'
                 })
                 return;
+            }
+        })
+    },
+    total_bill: function(req, res) {
+        var bill_id = req.param('bill_id'),
+            bill_total = req.param('bill_total');
+        if (!bill_id || bill_id === '') {
+            res.json({
+                status: 'error',
+                message: 'bill_id không hợp lệ',
+            })
+            return;
+        }
+        if (!bill_id || bill_id === '' || bill_total < 1) {
+            res.json({
+                status: 'error',
+                message: 'bill_total không hợp lệ',
+            })
+            return;
+        }
+        Bills.findOne({ bill_id }).exec(function (err, find) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (find) {
+                Bills.update({ bill_id }, { bill_total }).exec(function (err, updated) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    if (updated) {
+                        res.json({
+                            status:'success',
+                            message:'Lập hóa đơn thành công'
+                        })
+                        return;
+                    }
+                })
             }
         })
     },
@@ -188,7 +227,7 @@ module.exports = {
         })
     },
     list_bill: function (req, res) {
-        sql = "SELECT bills.bill_id, bills.bill_stu_id, students.stu_name, DATE_FORMAT(bills.createdAt,'%d/%m/%Y') as bill_createAt, bills.bill_create_name FROM bills LEFT JOIN students on bills.bill_stu_id = students.stu_id_school ORDER BY bill_createAt DESC";
+        sql = "SELECT bills.bill_id, bills.bill_stu_id, students.stu_name, DATE_FORMAT(bills.createdAt,'%d/%m/%Y') as bill_createAt, bills.bill_create_name, bills.bill_total FROM bills LEFT JOIN students on bills.bill_stu_id = students.stu_id_school ORDER BY bill_createAt DESC";
         Bills.query(sql, function (err, results) {
             if (err) {
                 console.log(err);

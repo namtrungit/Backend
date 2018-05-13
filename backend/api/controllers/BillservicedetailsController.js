@@ -8,8 +8,9 @@
 module.exports = {
     add_bs: function (req, res) {
         var bs_bill_id = req.param('bs_bill_id'),
-            bs_service_id = req.param('bs_service_id');
-        if (!bs_bill_id || bs_bill_id === '' || bs_bill_id < 1) {
+            bs_service_id = req.param('bs_service_id'),
+            bs_service_price = req.param('bs_service_price');
+        if (!bs_bill_id || bs_bill_id === '') {
             res.json({
                 status: 'error',
                 message: 'bs_bill_id không hợp lệ'
@@ -19,7 +20,14 @@ module.exports = {
         if (!bs_service_id || bs_service_id === '' || bs_service_id < 1) {
             res.json({
                 status: 'error',
-                message: 'bs_bill_id không hợp lệ'
+                message: 'bs_service_id không hợp lệ'
+            })
+            return;
+        }
+        if (!bs_service_price || bs_service_price === '' || bs_service_price < 1) {
+            res.json({
+                status: 'error',
+                message: 'bs_service_price không hợp lệ'
             })
             return;
         }
@@ -34,7 +42,7 @@ module.exports = {
                     message: 'Dịch vụ này đã có trong hóa đơn rồi'
                 })
             } else {
-                Billservicedetails.create({ bs_bill_id, bs_service_id }).exec(function (err, created) {
+                Billservicedetails.create({ bs_bill_id, bs_service_id, bs_service_price }).exec(function (err, created) {
                     if (err) {
                         console.log(err);
                         return;
@@ -112,9 +120,9 @@ module.exports = {
             }
             if (results) {
                 res.json({
-                    status:'success',
-                    message:'GET list_BillByID thành công',
-                    list_bs: results 
+                    status: 'success',
+                    message: 'GET list_BillByID thành công',
+                    list_bs: results
                 })
                 return;
             }

@@ -128,6 +128,7 @@ module.exports.routes = {
   "DELETE /bills/del-bill": "BillsController.del_bill",
   "GET /bills/bill": "BillsController.list_bill",
   "PUT /bills/new-bill": "BillsController.bill_new",
+  "PUT /bills/total-bill":"BillsController.total_bill",
 
   //BillserviceDetaills Controller
   "POST /bss/bs": "Billservicedetails.add_bs",
