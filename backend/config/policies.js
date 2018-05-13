@@ -58,6 +58,7 @@ module.exports.policies = {
   },
   'ContractregulationsController': {
     '*': 'auth',
+    'list_recontract_enable':true
   },
   'ContractsController': {
     '*': 'auth',
@@ -65,8 +66,13 @@ module.exports.policies = {
   'RegistersController': {
     '*': 'auth',
     'add_register': true
-  }
-
+  },
+  'ServicesController': {
+    '*': 'auth',
+  },
+  'BillsController': {
+    '*': 'auth',
+  },
   /***************************************************************************
   *                                                                          *
   * Here's an example of mapping some policies to run before a controller    *

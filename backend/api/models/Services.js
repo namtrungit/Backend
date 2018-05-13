@@ -17,13 +17,20 @@ module.exports = {
       type:'string',
       size:50
     },
-    service_procedure: {
-      type:'string',
-      size: 50,
+    service_price: {
+      type:'integer',
     },
-    service_description: {
-      type:'string',
+    service_date: {
+      type:'date',
+    },
+    service_content: {
+      type: 'string',
       size:200
+    },
+    service_status: {
+      type: 'string',
+      size:10,
+      enum: ['disable','enable']
     }
   }
 };

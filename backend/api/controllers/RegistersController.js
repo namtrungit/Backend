@@ -8,13 +8,6 @@ const moment = require('moment');
 const nodemailer = require('nodemailer');
 module.exports = {
     add_register: function (req, res) {
-        var transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'namtrung18101996@gmail.com',
-                pass: 'ntrung1996'
-            }
-        });
         var register_id_school = req.param('register_id_school'),
             register_name = req.param('register_name'),
             register_sex = req.param('register_sex'),
@@ -103,23 +96,17 @@ module.exports = {
                     message: 'Gửi phiếu đăng ký thành công',
                     register: created
                 })
-                var mailOptions = {
-                    from: 'namtrung18101996@gmail.com',
-                    to: register_mail,
-                    subject: 'Đăng ký phòng ký túc xá Hutech',
-                    html: '<h2>Chào bạn ' + register_name + ' <h2></br><h2>Chúng tôi đã nhận được về nhu cầu đăng ký phòng ký túc xá Hutech</h2></br><h4>Bạn hãy đến văn phòng ký túc xá để làm thủ thục trước 10 ngày kể từ ngày đăng ký bạn nhé!<h4></br><h2>Người gửi: Nam Trung<h2>'
-                };
-                transporter.sendMail(mailOptions, function (error, info) {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        console.log('Gửi mail cho sinh viên thành công');
-                    }
-                });
             }
         })
     },
     disable_register: function (req, res) {
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'namtrung18101996@gmail.com',
+                pass: 'ntrung1996'
+            }
+        });
         var register_id = req.param('register_id');
         if (!register_id || register_id === '' || register_id < 1) {
             res.json({
@@ -133,6 +120,8 @@ module.exports = {
                 return;
             }
             if (find) {
+                // console.log(find.register_mail);
+                // return;
                 Registers.update({ register_id }, { register_status: 'disable' }).exec(function (err, updated) {
                     if (err) {
                         console.log(err);
@@ -141,9 +130,24 @@ module.exports = {
                     if (updated) {
                         res.json({
                             status: 'success',
-                            message: 'Đã xem'
+                            message: 'Đã duyệt',
                         })
-                        return;
+                        // console.log(find.register_mail);
+                        // console.log(updated.register_name);
+                        // return;
+                        var mailOptions = {
+                            from: 'namtrung18101996@gmail.com',
+                            to: find.register_mail,
+                            subject: 'Đăng ký phòng ký túc xá Hutech',
+                            html: '<h2>Chào bạn ' + find.register_name + ' <h2></br><h2>Chúng tôi đã nhận được về nhu cầu đăng ký phòng ký túc xá Hutech</h2></br><h4>Bạn hãy đến văn phòng ký túc xá để làm thủ thục trước 10 ngày kể từ ngày nhận mail bạn nhé!<h4></br><h2>Người gửi: Nam Trung<h2>'
+                        };
+                        transporter.sendMail(mailOptions, function (error, info) {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                console.log('Gửi mail cho sinh viên thành công');
+                            }
+                        });
                     }
                 })
             }

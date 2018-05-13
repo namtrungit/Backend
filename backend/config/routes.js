@@ -51,6 +51,9 @@ module.exports.routes = {
   "PUT /students/swap-room": "StudentsController.swap_room",
   "PUT /students/end-room": "StudentsController.end_room",
   "POST /students/search-stu": "StudentsController.search_stu",
+  "POST /students/text-stu": "StudentsController.textcheck_stu",
+  "GET /students/list-id": "StudentsController.list_id_stu",
+
 
   //Faculties controller
   "POST /faculties/faculty": "FacultiesController.fal_create",
@@ -111,9 +114,26 @@ module.exports.routes = {
   "GET /registers/list-disable": "RegistersController.list_disable",
   "GET /registers/list-enable": "RegistersController.list_enable",
 
-  //Test send-email
-  "POST /emails/email": "EmailsController.create"
+  //Service Controller
+  "POST /services/service": "ServicesController.add_service",
+  "DELETE /services/del-service": "ServicesController.del_service",
+  "GET /services/service": "ServicesController.list_service",
+  "GET /services/service-enable": "ServicesController.list_service_enable",
+  "GET /services/new-service": "ServicesController.get_new",
+  "PUT /services/update-service": "ServicesController.update_service",
 
+  //Bill Controller
+  "POST /bills/bill": "BillsController.add_bill",
+  "PUT /bills/update-bill": "BillsController.update_bill",
+  "DELETE /bills/del-bill": "BillsController.del_bill",
+  "GET /bills/bill": "BillsController.list_bill",
+  "PUT /bills/new-bill": "BillsController.bill_new",
+
+  //BillserviceDetaills Controller
+  "POST /bss/bs": "Billservicedetails.add_bs",
+  "DELETE /bss/del-bs": "Billservicedetails.del_bs",
+  "GET /bss/bs": "Billservicedetails.list_bs",
+  "POST /bss/bsById": "Billservicedetails.list_bsById",
 
 
 

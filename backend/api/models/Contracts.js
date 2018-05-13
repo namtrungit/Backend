@@ -16,15 +16,22 @@ module.exports = {
     contract_date_get_room: {
       type: 'date'
     },
+    contract_date_end: {
+      type: 'date'
+    },
     contract_room_name: {
-      type:'string',
-      size:20,
+      type: 'string',
+      size: 20,
     },
     contract_id_stu_school: {
       type: 'integer'
     },
     contract_id_recontract: {
       type: 'integer'
+    },
+    contract_create: {
+      type:'string',
+      size:30
     }
   }
 };

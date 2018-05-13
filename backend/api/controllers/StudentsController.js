@@ -556,7 +556,7 @@ module.exports = {
         if (new_room_name === old_room_name) {
             res.json({
                 status: 'same',
-                message: 'Sinh viên này hiện đang ở phòng '+new_room_name
+                message: 'Sinh viên này hiện đang ở phòng ' + new_room_name
             })
             return;
         }
@@ -624,7 +624,7 @@ module.exports = {
 
                             if (err) {
                                 console.log(err);
-                                reuturn;
+                                return;
                             }
                             if (!find) {
                                 res.json({
@@ -781,6 +781,41 @@ module.exports = {
                     status: 'success',
                     message: 'GET list_stu tìm kiếm thành công',
                     list: results
+                })
+                return;
+            }
+        })
+    },
+    textcheck_stu: function (req, res) {
+        var stu_id_school = req.param('stu_id_school');
+        console.log(stu_id_school);
+        sql = "SELECT students.stu_id_school FROM students WHERE students.stu_id_school like '" + stu_id_school + "%'";
+        Students.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status: 'success',
+                    message: 'GET mã số sinh viên trên textbox thành công',
+                    id: results
+                })
+            }
+        })
+    },
+    list_id_stu: function (req, res) {
+        sql = "SELECT students.stu_id_school FROM students";
+        Students.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status: 'success',
+                    message: 'GET list id_stu thành công',
+                    list_id: results
                 })
                 return;
             }
