@@ -65,7 +65,7 @@ module.exports.routes = {
   "GET /rooms/room": "RoomsController.list_room",
   "DELETE /rooms/del-room": "RoomsController.del_room",
   "PUT /rooms/update-room": "RoomsController.update_room",
-  "GET /rooms/find-room": "RoomsController.find_room",
+  "POST /rooms/find-room": "RoomsController.find_room",
   "POST /rooms/type-room": "RoomsController.find_room_s",
 
   //Areas Controller
@@ -105,6 +105,7 @@ module.exports.routes = {
   "DELETE /contracts/del-contract": "ContractsController.del_contract",
   "PUT /contracts/update-contract": "ContractsController.update_contract",
   "GET /contracts/list-contract": "ContractsController.list_contract",
+  "POST /contracts/chart-contract": "ContractsController.chart_contract",
 
   //Register Controller
   "POST /registers/register": "RegistersController.add_register",
@@ -128,13 +129,36 @@ module.exports.routes = {
   "DELETE /bills/del-bill": "BillsController.del_bill",
   "GET /bills/bill": "BillsController.list_bill",
   "PUT /bills/new-bill": "BillsController.bill_new",
-  "PUT /bills/total-bill":"BillsController.total_bill",
+  "PUT /bills/total-bill": "BillsController.total_bill",
+  "POST /bills/find-bill": "BillsController.find_bill",
 
   //BillserviceDetaills Controller
   "POST /bss/bs": "Billservicedetails.add_bs",
   "DELETE /bss/del-bs": "Billservicedetails.del_bs",
   "GET /bss/bs": "Billservicedetails.list_bs",
   "POST /bss/bsById": "Billservicedetails.list_bsById",
+
+  // RuleController
+  "POST /rules/rule": "RulesController.add_rule",
+  "PUT /rules/update-rule": "RulesController.update_rule",
+  "DELETE /rules/del-rule": "RulesController.del_rule",
+  "GET /rules/rule": "RulesController.list_rule",
+
+  // ElecController
+  "POST /elecs/elec": "ElecsController.add_elec",
+  "DELETE /elecs/del-elec": "ElecsController.del_elec",
+  "PUT /elecs/update-elec": "ElecsController.update_elec",
+  "GET /elecs/elec-enable": "ElecsController.get_elec_enable",
+  "GET /elecs/elec-disable": "ElecsController.get_elec_disable",
+  "POST /elecs/elec-enable-month": "ElecsController.get_elec_month",
+  "POST /elecs/elec-disable-month": "ElecsController.get_elec_month_diable",
+  "PUT /elecs/check-disable":"ElecsController.check_disable",
+  "PUT /elecs/check-enable":"ElecsController.check_enable",
+  "POST /elecs/find-elec-enable":"ElecsController.find_elec_enable",
+  "POST /elecs/find-elec-disable":"ElecsController.find_elec_disable",
+
+  // EBill Controller
+  "POST /ebills/ebill": "EbillsController.add_ebill",
 
 
 

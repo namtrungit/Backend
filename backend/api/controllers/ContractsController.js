@@ -206,13 +206,21 @@ module.exports = {
         })
     },
     add_contract: function (req, res) {
-        var contract_date_get_room = req.param('contract_date_get_room'),
+        var contract_id = req.param('contract_id'),
+            contract_date_get_room = req.param('contract_date_get_room'),
             contract_date_end = req.param('contract_date_end'),
             contract_room_name = req.param('contract_room_name'),
             contract_id_stu_school = req.param('contract_id_stu_school'),
             contract_id_recontract = req.param('contract_id_recontract'),
             contract_create = req.param('contract_create'),
             month;
+        if (!contract_id || contract_id === '') {
+            res.json({
+                status: 'error',
+                message: 'contract_id không hợp lệ'
+            })
+            return;
+        }
         if (!contract_date_get_room || contract_date_get_room === '') {
             res.json({
                 status: 'error',
@@ -289,6 +297,7 @@ module.exports = {
                                         month = results[0].month;
                                         if (month === find.recontract_limit) {
                                             Contracts.create({
+                                                contract_id,
                                                 contract_date_get_room,
                                                 contract_date_end,
                                                 contract_room_name,
@@ -334,6 +343,23 @@ module.exports = {
                 res.json({
                     status: 'warning stu'
                 })
+            }
+        })
+    },
+    chart_contract: function (req, res) {
+        var month_year = req.param('month_year')
+        sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, areafloordetails.af_price FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school, areafloordetails WHERE rooms.room_id_area = areafloordetails.af_area_id and rooms.room_id_floor = areafloordetails.af_floor_id AND contracts.contract_date_end like '" + month_year + "%'";
+        Contracts.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status:'success',
+                    Contracts: results
+                })
+                return;
             }
         })
     }

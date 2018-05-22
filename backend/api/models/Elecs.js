@@ -1,5 +1,5 @@
 /**
- * Contracts.js
+ * Elecs.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
@@ -8,30 +8,33 @@
 module.exports = {
 
   attributes: {
-    contract_id: {
-      type: 'string',
-      primaryKey: true,
-      size:20
-    },
-    contract_date_get_room: {
-      type: 'date'
-    },
-    contract_date_end: {
-      type: 'date'
-    },
-    contract_room_name: {
+    elec_id: {
       type: 'string',
       size: 20,
+      primaryKey: true
     },
-    contract_id_stu_school: {
-      type: 'integer'
-    },
-    contract_id_recontract: {
-      type: 'integer'
-    },
-    contract_create: {
+    elec_room: {
       type:'string',
-      size:30
+      size:10
+    },
+    elec_month: {
+      type: 'string',
+      size: 10
+    },
+    elec_amount: {
+      type: 'integer'
+    },
+    elec_total: {
+      type: 'integer'
+    },
+    elec_creater: {
+      type: 'string',
+      size: 30
+    },
+    elec_status: {
+      type: 'string',
+      size:10,
+      enum: ['disable','enable']
     }
   }
 };

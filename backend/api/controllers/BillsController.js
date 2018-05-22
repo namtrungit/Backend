@@ -60,7 +60,7 @@ module.exports = {
             }
         })
     },
-    total_bill: function(req, res) {
+    total_bill: function (req, res) {
         var bill_id = req.param('bill_id'),
             bill_total = req.param('bill_total');
         if (!bill_id || bill_id === '') {
@@ -90,8 +90,8 @@ module.exports = {
                     }
                     if (updated) {
                         res.json({
-                            status:'success',
-                            message:'Lập hóa đơn thành công'
+                            status: 'success',
+                            message: 'Lập hóa đơn thành công'
                         })
                         return;
                     }
@@ -261,5 +261,40 @@ module.exports = {
             }
         })
     },
+    find_bill: function (req, res) {
+        var bill_id = req.param('bill_id'),
+            bill_stu_id = req.param('bill_stu_id');
+        if (bill_id && bill_stu_id) {
+            sql = "SELECT bills.bill_id, bills.bill_stu_id, students.stu_name, DATE_FORMAT(bills.createdAt,'%d/%m/%Y') as bill_createAt, bills.bill_create_name, bills.bill_total FROM bills LEFT JOIN students on bills.bill_stu_id = students.stu_id_school WHERE bills.bill_id = '" + bill_id + "' and bills.bill_stu_id = " + bill_stu_id + " ORDER BY bill_createAt DESC"
+            console.log(1);
+        }
+        if (bill_id && !bill_stu_id) {
+            sql = "SELECT bills.bill_id, bills.bill_stu_id, students.stu_name, DATE_FORMAT(bills.createdAt,'%d/%m/%Y') as bill_createAt, bills.bill_create_name, bills.bill_total FROM bills LEFT JOIN students on bills.bill_stu_id = students.stu_id_school WHERE bills.bill_id = '" + bill_id + "'  ORDER BY bill_createAt DESC"
+        }
+        if (!bill_id && bill_stu_id) {
+            sql = "SELECT bills.bill_id, bills.bill_stu_id, students.stu_name, DATE_FORMAT(bills.createdAt,'%d/%m/%Y') as bill_createAt, bills.bill_create_name, bills.bill_total FROM bills LEFT JOIN students on bills.bill_stu_id = students.stu_id_school WHERE  bills.bill_stu_id = " + bill_stu_id + " ORDER BY bill_createAt DESC"
+        }
+        if (!bill_id && !bill_stu_id) {
+            res.json({
+                status: 'warning',
+                message: 'Bạn chưa nhập gì để tìm kiếm'
+            })
+            return;
+        }
+        Bills.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status:'success',
+                    message:'Tìm kiếm thành công',
+                    list: results
+                })
+                return;
+            }
+        })
+    }
 };
 

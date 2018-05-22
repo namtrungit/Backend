@@ -58,7 +58,7 @@ module.exports.policies = {
   },
   'ContractregulationsController': {
     '*': 'auth',
-    'list_recontract_enable':true
+    'list_recontract_enable': true
   },
   'ContractsController': {
     '*': 'auth',
@@ -71,6 +71,16 @@ module.exports.policies = {
     '*': 'auth',
   },
   'BillsController': {
+    '*': 'auth',
+  },
+  'BillservicedetailsController': {
+    '*' : 'auth'
+  },
+  'RulesController': {
+    '*': 'auth',
+    'list_rule': true
+  },
+  'ElecsController': {
     '*': 'auth',
   },
   /***************************************************************************
