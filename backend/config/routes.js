@@ -152,13 +152,20 @@ module.exports.routes = {
   "GET /elecs/elec-disable": "ElecsController.get_elec_disable",
   "POST /elecs/elec-enable-month": "ElecsController.get_elec_month",
   "POST /elecs/elec-disable-month": "ElecsController.get_elec_month_diable",
-  "PUT /elecs/check-disable":"ElecsController.check_disable",
-  "PUT /elecs/check-enable":"ElecsController.check_enable",
-  "POST /elecs/find-elec-enable":"ElecsController.find_elec_enable",
-  "POST /elecs/find-elec-disable":"ElecsController.find_elec_disable",
+  "PUT /elecs/check-disable": "ElecsController.check_disable",
+  "PUT /elecs/check-enable": "ElecsController.check_enable",
+  "POST /elecs/find-elec-enable": "ElecsController.find_elec_enable",
+  "POST /elecs/find-elec-disable": "ElecsController.find_elec_disable",
 
   // EBill Controller
   "POST /ebills/ebill": "EbillsController.add_ebill",
+
+  //News Controller
+  "POST /news/news": "NewsController.add_news",
+  "POST /news/upload-picture": "NewsController.news_upload_picture",
+  "DELETE /news/del-news": "NewsController.del_news",
+  "PUT /news/update-news": "NewsController.update_news",
+  "GET /news/news": "NewsController.list_news",
 
 
 

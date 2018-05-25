@@ -83,6 +83,10 @@ module.exports.policies = {
   'ElecsController': {
     '*': 'auth',
   },
+  'NewsController': {
+    '*': 'auth',
+    'news_upload_picture': true
+  },
   /***************************************************************************
   *                                                                          *
   * Here's an example of mapping some policies to run before a controller    *

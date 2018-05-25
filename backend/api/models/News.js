@@ -1,5 +1,5 @@
 /**
- * Feedback.js
+ * News.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
@@ -8,21 +8,24 @@
 module.exports = {
 
   attributes: {
-    feedback_id: {
+    new_id: {
       type: 'integer',
       primaryKey: true,
       autoIncrement: true
     },
-    feedback_status:{
-      type:'string',
-      size:50
+    new_title: {
+      type: 'string',
+      size: 50
     },
-    feedback_message: {
-      type:'string',
-      size: 1000
+    new_content: {
+      type: 'text'
     },
-    stu_id : {
-      model:'students'
+    new_picture: {
+      type: 'string'
+    },
+    new_creater: {
+      type:'string',
+      size: 30
     }
   }
 };
