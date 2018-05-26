@@ -8,18 +8,11 @@
 module.exports = {
     add_area: function (req, res) {
         var area_address = req.param('area_address'),
-            area_sympol = req.param('area_sympol'),
-            area_sex = req.param('area_sex');
+            area_sympol = req.param('area_sympol');
         if (!area_address || area_address === '') {
             res.json({
                 status: 'error',
                 message: 'area_address không hợp lệ!'
-            })
-        }
-        if (!area_sex || area_sex === '') {
-            res.json({
-                status: 'error',
-                message: 'area_sex không hợp lệ!'
             })
         }
         if (!area_sympol || area_sympol === '') {
@@ -30,7 +23,6 @@ module.exports = {
         }
         Areas.create({
             area_address,
-            area_sex,
             area_sympol
         }).exec(function (err, created) {
             if (err) {
@@ -98,8 +90,7 @@ module.exports = {
     update_area: function (req, res) {
         var area_id = req.param('area_id'),
             area_address = req.param('area_address'),
-            area_sympol = req.param('area_sympol'),
-            area_sex = req.param('area_sex');
+            area_sympol = req.param('area_sympol');
         if (!area_id || area_id === '' || area_id < 1) {
             res.json({
                 status: 'error',
@@ -119,35 +110,29 @@ module.exports = {
                 message: 'area_sympol không hợp lệ!'
             })
         }
-        if (!area_sex || area_sex === '') {
-            res.json({
-                status: 'error',
-                message: 'area_sex không hợp lệ!'
-            })
-        }
-        Areas.findOne({area_id}).exec(function(err,find){
-            if(err){
+        Areas.findOne({ area_id }).exec(function (err, find) {
+            if (err) {
                 console.log(err);
                 return;
             }
-            if(find){
-                Areas.update({area_id},{area_address,area_sympol,area_sex}).exec(function(err,updated){
-                    if(err){
+            if (find) {
+                Areas.update({ area_id }, { area_address, area_sympol }).exec(function (err, updated) {
+                    if (err) {
                         console.log(err);
                         return;
                     }
-                    if(updated){
+                    if (updated) {
                         res.json({
-                            status:'success',
-                            message:'Cập nhật thành công'
+                            status: 'success',
+                            message: 'Cập nhật thành công'
                         })
                         return;
                     }
                 })
-            }else{
+            } else {
                 res.json({
-                    status:'warning',
-                    message:'Không tìm thấy area_id: '+area_id
+                    status: 'warning',
+                    message: 'Không tìm thấy area_id: ' + area_id
                 })
                 return;
             }

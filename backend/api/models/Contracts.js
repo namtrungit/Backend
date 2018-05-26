@@ -32,6 +32,9 @@ module.exports = {
     contract_create: {
       type:'string',
       size:30
+    },
+    contract_total: {
+      type: 'integer'
     }
   }
 };

@@ -21,11 +21,6 @@ module.exports = {
       type: 'string',
       size: 20
     },
-    area_sex: {
-      type: 'string',
-      size: 10,
-      enum: ['male', 'female']
-    }
   }
 };
 

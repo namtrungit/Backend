@@ -21,13 +21,13 @@ module.exports = {
     room_max: {
       type: 'integer'
     },
-    room_empty: {
-      type: 'integer'
-    },
     room_id_area:{
       type: 'integer'
     },
-    room_id_floor:{
+    room_floor: {
+      type: 'integer'
+    },
+    room_price: {
       type: 'integer'
     }
   }

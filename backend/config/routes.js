@@ -46,7 +46,7 @@ module.exports.routes = {
   "DELETE /students/del-student": "StudentsController.stu_del",
   "GET /students/student": "StudentsController.stu_list",
   "POST /students/upload-avatar": "StudentsController.stu_upload_avatar",
-  "GET /students/student-room": "StudentsController.stu_list_in_room",
+  "POST /students/student-room": "StudentsController.stu_list_in_room",
   "POST /students/pick-room": "StudentsController.pick_room",
   "PUT /students/swap-room": "StudentsController.swap_room",
   "PUT /students/end-room": "StudentsController.end_room",
@@ -67,6 +67,7 @@ module.exports.routes = {
   "PUT /rooms/update-room": "RoomsController.update_room",
   "POST /rooms/find-room": "RoomsController.find_room",
   "POST /rooms/type-room": "RoomsController.find_room_s",
+  "PUT /rooms/update-price": "RoomsController.update_price",
 
   //Areas Controller
   "POST /areas/area": "AreasController.add_area",
@@ -85,12 +86,6 @@ module.exports.routes = {
   "DELETE /floors/del-floor": "FloorsController.del_floor",
   "GET /floors/floor": "FloorsController.list_floor",
 
-  //AF Details Controller
-  "POST /afds/afd": "AreafloordetailsController.add_afd",
-  "DELETE /afds/del-afd": "AreafloordetailsController.del_afd",
-  "PUT /afds/update-afd": "AreafloordetailsController.update_afd",
-  "GET /afds/afd": "AreafloordetailsController.list_afd",
-  "GET /afds/afdByAreaId": "AreafloordetailsController.list_afdByAreaId",
 
 
   //recontract Contractregulations Controller
@@ -106,6 +101,7 @@ module.exports.routes = {
   "PUT /contracts/update-contract": "ContractsController.update_contract",
   "GET /contracts/list-contract": "ContractsController.list_contract",
   "POST /contracts/chart-contract": "ContractsController.chart_contract",
+  // "POST /test/test": "ContractsController.add_test",
 
   //Register Controller
   "POST /registers/register": "RegistersController.add_register",
@@ -156,9 +152,6 @@ module.exports.routes = {
   "PUT /elecs/check-enable": "ElecsController.check_enable",
   "POST /elecs/find-elec-enable": "ElecsController.find_elec_enable",
   "POST /elecs/find-elec-disable": "ElecsController.find_elec_disable",
-
-  // EBill Controller
-  "POST /ebills/ebill": "EbillsController.add_ebill",
 
   //News Controller
   "POST /news/news": "NewsController.add_news",
