@@ -9,13 +9,7 @@ const nodemailer = require('nodemailer');
 module.exports = {
     add_register: function (req, res) {
         var register_id_school = req.param('register_id_school'),
-            register_name = req.param('register_name'),
-            register_sex = req.param('register_sex'),
-            register_birthday = req.param('register_birthday'),
-            register_class = req.param('register_class'),
-            register_faculty = req.param('register_faculty'),
-            register_phone = req.param('register_phone'),
-            register_mail = req.param('register_mail');
+            register_content = req.param('register_content');
         if (!register_id_school || register_id_school === '' || register_id_school < 1) {
             res.json({
                 status: 'error',
@@ -23,81 +17,42 @@ module.exports = {
             })
             return;
         }
-        if (!register_name || register_name === '') {
+        if (!register_content || register_content === '') {
             res.json({
                 status: 'error',
-                message: 'Tên sinh viên không hợp lệ'
+                message: 'Nội dung nhập phiếu đăng ký không hợp lệ'
             })
             return;
         }
-        if (!register_sex || register_sex === '') {
-            res.json({
-                status: 'error',
-                message: 'Giới tính sinh viên không hợp lệ'
-            })
-            return;
-        }
-        if (!register_birthday || register_birthday === '') {
-            res.json({
-                status: 'error',
-                message: 'Ngày của sinh viên không hợp lệ'
-            })
-            return;
-        }
-        if (!register_class || register_class === '') {
-            res.json({
-                status: 'error',
-                message: 'Lớp của sinh viên không hợp lệ'
-            })
-            return;
-        }
-        if (!register_faculty || register_faculty === '') {
-            res.json({
-                status: 'error',
-                message: 'Khoa của sinh viên không hợp lệ'
-            })
-            return;
-        }
-        if (!register_phone || register_phone === '' || register_phone.length > 12) {
-            res.json({
-                status: 'error',
-                message: 'SDT của sinh viên không hợp lệ'
-            })
-            return;
-        }
-        if (!register_mail || register_mail === '') {
-            res.json({
-                status: 'error',
-                message: 'Email của sinh viên không hợp lệ'
-            })
-            return;
-        }
-        let bd = register_birthday.split('/')[2] + "-" + register_birthday.split('/')[1] + "-" + register_birthday.split('/')[0]; // ['dd','mm','yyyy'] hàm cắt
-        //console.log('Đã format'+moment(bd).format('YYYY-MM-DD'));
-        register_birthday = moment(bd).format('YYYY-MM-DD');
-        Registers.create({
-            register_id_school,
-            register_name,
-            register_sex,
-            register_birthday,
-            register_class,
-            register_faculty,
-            register_phone,
-            register_mail,
-            register_status: 'enable'
-        }).exec(function (err, created) {
+        Students.findOne({ stu_id_school: register_id_school }).exec(function (err, find) {
             if (err) {
                 console.log(err);
                 return;
             }
-            if (created) {
-                res.json({
-                    status: 'success',
-                    message: 'Gửi phiếu đăng ký thành công',
-                    register: created
+            if (find) {
+                Registers.create({ register_id_school, register_content, register_status: 'enable' }).exec(function (err, created) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    if (created) {
+                        res.json({
+                            status: 'success',
+                            message: 'Gửi phiếu đăng ký thành công',
+                            register: created
+                        })
+                    }
                 })
             }
+            else {
+                res.json({
+                    status: 'warning',
+                    message: 'Mã số sinh viên bạn nhập vào không hợp lệ'
+                })
+                return;
+            }
         })
+
     },
     disable_register: function (req, res) {
         var transporter = nodemailer.createTransport({
@@ -120,34 +75,44 @@ module.exports = {
                 return;
             }
             if (find) {
-                // console.log(find.register_mail);
-                // return;
-                Registers.update({ register_id }, { register_status: 'disable' }).exec(function (err, updated) {
+                Students.findOne({ stu_id_school: find.register_id_school }).exec(function (err, find) {
                     if (err) {
                         console.log(err);
                         return;
                     }
-                    if (updated) {
-                        res.json({
-                            status: 'success',
-                            message: 'Đã duyệt',
-                        })
-                        // console.log(find.register_mail);
-                        // console.log(updated.register_name);
-                        // return;
-                        var mailOptions = {
-                            from: 'namtrung18101996@gmail.com',
-                            to: find.register_mail,
-                            subject: 'Đăng ký phòng ký túc xá Hutech',
-                            html: '<h2>Chào bạn ' + find.register_name + ' <h2></br><h2>Chúng tôi đã nhận được về nhu cầu đăng ký phòng ký túc xá Hutech</h2></br><h4>Bạn hãy đến văn phòng ký túc xá để làm thủ thục trước 10 ngày kể từ ngày nhận mail bạn nhé!<h4></br><h2>Người gửi: Nam Trung<h2>'
-                        };
-                        transporter.sendMail(mailOptions, function (error, info) {
-                            if (error) {
-                                console.log(error);
-                            } else {
-                                console.log('Gửi mail cho sinh viên thành công');
+                    if (find) {
+                        var email = find.stu_email;
+                        var name = find.stu_name;
+                        console.log(email);
+                        console.log(name);
+                        Registers.update({ register_id }, { register_status: 'disable' }).exec(function (err, updated) {
+                            if (err) {
+                                console.log(err);
+                                return;
                             }
-                        });
+                            if (updated) {
+                                res.json({
+                                    status: 'success',
+                                    message: 'Đã duyệt',
+                                })
+                                // console.log(find.register_mail);
+                                // console.log(updated.register_name);
+                                // return;
+                                var mailOptions = {
+                                    from: 'namtrung18101996@gmail.com',
+                                    to: email,
+                                    subject: 'Đăng ký phòng ký túc xá Hutech',
+                                    html: '<h2>Chào bạn ' + name + ' <h2></br><h2>Chúng tôi đã nhận được về nhu cầu đăng ký phòng ký túc xá Hutech</h2></br><h4>Bạn hãy đến văn phòng ký túc xá để làm thủ thục trước 10 ngày kể từ ngày nhận mail bạn nhé!<h4></br><h2>Người gửi: Nam Trung<h2>'
+                                };
+                                transporter.sendMail(mailOptions, function (error, info) {
+                                    if (error) {
+                                        console.log(error);
+                                    } else {
+                                        console.log('Gửi mail cho sinh viên thành công');
+                                    }
+                                });
+                            }
+                        })
                     }
                 })
             }
@@ -194,31 +159,33 @@ module.exports = {
         })
     },
     list_disable: function (req, res) {
-        Registers.find({ register_status: 'disable' }).exec(function (err, find) {
+        sql = "SELECT registers.register_id,registers.register_id_school, registers.register_content, registers.register_status, students.stu_id_school, students.stu_name, students.stu_sex, students.stu_phone, DATE_FORMAT(students.stu_birthday,'%d/%m/%Y') as stu_birthday, classes.class_name, faculties.fal_name, students.stu_email, students.stu_phone,DATE_FORMAT(registers.createdAt,'%d/%m/%Y') as createdAt FROM students, classes, faculties, registers WHERE registers.register_id_school = students.stu_id_school AND students.stu_id_class = classes.class_id AND faculties.fal_id = classes.class_id_faculty AND registers.register_status = 'disable'";
+        Registers.query(sql, function (err, results) {
             if (err) {
                 console.log(err);
                 return;
             }
-            if (find) {
+            if (results) {
                 res.json({
                     status:'success',
-                    message:'GET list disable thành công',
-                    Registers: find
+                    message:'GET danh sách phiếu chưa xem thành công',
+                    list: results
                 })
             }
         })
     },
     list_enable: function (req, res) {
-        Registers.find({ register_status: 'enable' }).exec(function (err, find) {
+        sql = "SELECT registers.register_id,registers.register_id_school, registers.register_content, registers.register_status, students.stu_id_school, students.stu_name, students.stu_sex, students.stu_phone, DATE_FORMAT(students.stu_birthday,'%d/%m/%Y') as stu_birthday, classes.class_name, faculties.fal_name, students.stu_email, students.stu_phone,DATE_FORMAT(registers.createdAt,'%d/%m/%Y') as createdAt FROM students, classes, faculties, registers WHERE registers.register_id_school = students.stu_id_school AND students.stu_id_class = classes.class_id AND faculties.fal_id = classes.class_id_faculty AND registers.register_status = 'enable'";
+        Registers.query(sql, function (err, results) {
             if (err) {
                 console.log(err);
                 return;
             }
-            if (find) {
+            if (results) {
                 res.json({
                     status:'success',
-                    message:'GET list enable thành công',
-                    Registers: find
+                    message:'GET danh sách phiếu chưa xem thành công',
+                    list: results
                 })
             }
         })

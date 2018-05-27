@@ -100,7 +100,10 @@ module.exports.routes = {
   "DELETE /contracts/del-contract": "ContractsController.del_contract",
   "PUT /contracts/update-contract": "ContractsController.update_contract",
   "GET /contracts/list-contract": "ContractsController.list_contract",
+  "GET /contracts/list-contract-old": "ContractsController.list_contract_old",
   "POST /contracts/chart-contract": "ContractsController.chart_contract",
+  "POST /contracts/find-contract":"ContractsController.find_contract",
+  "POST /contracts/find-contract-old":"ContractsController.find_contract_old",
   // "POST /test/test": "ContractsController.add_test",
 
   //Register Controller

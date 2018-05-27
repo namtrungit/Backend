@@ -753,11 +753,11 @@ module.exports = {
             sql;
         if (!stu_id_school && stu_name) {
             // console.log(1);
-            sql = "SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,'%d/%m/%Y') as stu_birthday,students.stu_room_name,students.stu_id_class, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name,rooms.room_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id LEFT JOIN rooms on students.stu_room_name = rooms.room_name, faculties WHERE faculties.fal_id = classes.class_id_faculty AND students.stu_name LIKE '%" + stu_name + "%'";
+            sql = "SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,'%d/%m/%Y') as stu_birthday,students.stu_id_class, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id , faculties WHERE faculties.fal_id = classes.class_id_faculty AND students.stu_name LIKE '%" + stu_name + "%'";
         }
         else if (!stu_name && stu_id_school) {
             // console.log(2);
-            sql = "SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,'%d/%m/%Y') as stu_birthday,students.stu_room_name,students.stu_id_class, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name,rooms.room_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id LEFT JOIN rooms on students.stu_room_name = rooms.room_name, faculties WHERE faculties.fal_id = classes.class_id_faculty AND students.stu_id_school = " + stu_id_school + "";
+            sql = "SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,'%d/%m/%Y') as stu_birthday,students.stu_id_class, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id , faculties WHERE faculties.fal_id = classes.class_id_faculty AND students.stu_id_school = " + stu_id_school + "";
         }
         else if (!stu_id_school && !stu_name) {
             res.json({
@@ -769,7 +769,7 @@ module.exports = {
         }
         else {
             // console.log(4);
-            sql = "SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,'%d/%m/%Y') as stu_birthday,students.stu_room_name,students.stu_id_class, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name,rooms.room_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id LEFT JOIN rooms on students.stu_room_name = rooms.room_name, faculties WHERE faculties.fal_id = classes.class_id_faculty AND students.stu_name LIKE '%" + stu_name + "%' and students.stu_id_school = " + stu_id_school + "";
+            sql = "SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,'%d/%m/%Y') as stu_birthday,students.stu_id_class, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id , faculties WHERE faculties.fal_id = classes.class_id_faculty AND students.stu_name LIKE '%" + stu_name + "%' and students.stu_id_school = " + stu_id_school + "";
         }
         Students.query(sql, function (err, results) {
             if (err) {
