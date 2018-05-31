@@ -87,6 +87,9 @@ module.exports.policies = {
     '*': 'auth',
     'news_upload_picture': true
   },
+  'ReportsController': {
+    '*': 'auth',
+  },
   /***************************************************************************
   *                                                                          *
   * Here's an example of mapping some policies to run before a controller    *

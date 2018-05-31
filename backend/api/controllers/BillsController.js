@@ -161,12 +161,13 @@ module.exports = {
             })
             return;
         }
-        Billservicedetails.find({ bs_bill_id: bill_id }).exec(function (err, find) {
+        Billservicedetails.findOne({ bs_bill_id: bill_id }).exec(function (err, find) {
             if (err) {
                 console.log(err);
                 return;
             }
             if (find) {
+                console.log('Hóa đơn có chi tiết');
                 Billservicedetails.destroy({ bs_bill_id: bill_id }).exec(function (err) {
                     if (err) {
                         console.log(err);
@@ -199,6 +200,7 @@ module.exports = {
                 })
             }
             else {
+                console.log('Hóa đơn này ko có chi tiết');
                 Bills.findOne({ bill_id }).exec(function (err, find) {
                     if (err) {
                         console.log(err);
@@ -288,8 +290,8 @@ module.exports = {
             }
             if (results) {
                 res.json({
-                    status:'success',
-                    message:'Tìm kiếm thành công',
+                    status: 'success',
+                    message: 'Tìm kiếm thành công',
                     list: results
                 })
                 return;
