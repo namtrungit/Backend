@@ -9,7 +9,8 @@ module.exports = {
     add_bill: function (req, res) {
         var bill_id = req.param('bill_id'),
             bill_stu_id = req.param('bill_stu_id'),
-            bill_create_name = req.param('bill_create_name');
+            bill_create_name = req.param('bill_create_name'),
+            bill_total = req.param('bill_total');
         if (!bill_id || bill_id === '') {
             res.json({
                 status: 'error',
@@ -31,13 +32,20 @@ module.exports = {
             })
             return;
         }
+        if (!bill_total || bill_total === '' || bill_total < 1) {
+            res.json({
+                status: 'error',
+                message: 'bill_total không hợp lệ'
+            })
+            return;
+        }
         Students.findOne({ stu_id_school: bill_stu_id }).exec(function (err, find) {
             if (err) {
                 console.log(err);
                 return;
             }
             if (find) {
-                Bills.create({ bill_id, bill_stu_id, bill_create_name }).exec(function (err, created) {
+                Bills.create({ bill_id, bill_stu_id, bill_create_name, bill_total }).exec(function (err, created) {
                     if (err) {
                         console.log(err);
                         return;

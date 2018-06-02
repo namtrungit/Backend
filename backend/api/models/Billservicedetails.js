@@ -25,6 +25,9 @@ module.exports = {
     },
     bs_service_price: {
       type: 'integer'
+    },
+    bs_total: {
+      type: 'integer'
     }
   }
 };
