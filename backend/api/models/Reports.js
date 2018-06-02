@@ -17,8 +17,12 @@ module.exports = {
       type: 'integer'
     },
     report_content: {
-      type:'text'
+      type: 'text'
     },
+    report_creater: {
+      type: 'string',
+      size: 30
+    }
   }
 };
 

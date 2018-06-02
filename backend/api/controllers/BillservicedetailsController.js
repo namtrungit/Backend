@@ -9,6 +9,7 @@ module.exports = {
     add_bs: function (req, res) {
         var bs_bill_id = req.param('bs_bill_id'),
             bs_service_id = req.param('bs_service_id'),
+            bs_count = req.param('bs_count'),
             bs_service_price = req.param('bs_service_price');
         if (!bs_bill_id || bs_bill_id === '') {
             res.json({
@@ -21,6 +22,13 @@ module.exports = {
             res.json({
                 status: 'error',
                 message: 'bs_service_id không hợp lệ'
+            })
+            return;
+        }
+        if (!bs_count || bs_count === '' || bs_count < 1) {
+            res.json({
+                status: 'error',
+                message: 'bs_count không hợp lệ'
             })
             return;
         }
@@ -42,7 +50,7 @@ module.exports = {
                     message: 'Dịch vụ này đã có trong hóa đơn rồi'
                 })
             } else {
-                Billservicedetails.create({ bs_bill_id, bs_service_id, bs_service_price }).exec(function (err, created) {
+                Billservicedetails.create({ bs_bill_id, bs_service_id, bs_count, bs_service_price }).exec(function (err, created) {
                     if (err) {
                         console.log(err);
                         return;
@@ -112,7 +120,7 @@ module.exports = {
             })
             return;
         }
-        sql = "SELECT billservicedetails.bs_id, billservicedetails.bs_bill_id, billservicedetails.bs_service_id, services.service_name, services.service_price FROM billservicedetails LEFT JOIN bills on billservicedetails.bs_bill_id = bills.bill_id LEFT JOIN services ON billservicedetails.bs_service_id = services.service_id WHERE billservicedetails.bs_bill_id = '" + bs_bill_id + "'";
+        sql = "SELECT billservicedetails.bs_id, billservicedetails.bs_bill_id, billservicedetails.bs_service_id, services.service_name, billservicedetails.bs_count, billservicedetails.bs_service_price FROM billservicedetails LEFT JOIN bills on billservicedetails.bs_bill_id = bills.bill_id LEFT JOIN services ON billservicedetails.bs_service_id = services.service_id WHERE billservicedetails.bs_bill_id = '" + bs_bill_id + "'";
         Billservicedetails.query(sql, function (err, results) {
             if (err) {
                 console.log(err);

@@ -9,7 +9,8 @@ module.exports = {
     add_report: function (req, res) {
         var report_id = req.param('report_id'),
             report_stu_id = req.param('report_stu_id'),
-            report_content = req.param('report_content');
+            report_content = req.param('report_content'),
+            report_creater = req.param('report_creater');
         if (!report_id || report_id === '') {
             res.json({
                 status: 'error',
@@ -31,13 +32,20 @@ module.exports = {
             })
             return;
         }
+        if (!report_creater || report_creater === '') {
+            res.json({
+                status: 'error',
+                message: 'report_creater không hợp lệ'
+            })
+            return;
+        }
         Students.findOne({ stu_id_school: report_stu_id }).exec(function (err, find) {
             if (err) {
                 console.log(err);
                 return;
             }
             if (find) {
-                Reports.create({ report_id, report_stu_id, report_content }).exec(function (err, created) {
+                Reports.create({ report_id, report_stu_id, report_content, report_creater }).exec(function (err, created) {
                     if (err) {
                         console.log(err);
                         return;
@@ -189,7 +197,21 @@ module.exports = {
         })
     },
     list_report: function (req, res) {
-        sql = "SELECT reports.report_id, reports.report_stu_id, reports.report_content, DATE_FORMAT(reports.createdAt,'%d/%m/%Y') as createdAt, students.stu_name, classes.class_name, faculties.fal_name FROM reports, classes, students, faculties WHERE faculties.fal_id = classes.class_id_faculty AND classes.class_id = students.stu_id_class AND students.stu_id_school = reports.report_stu_id"
+        sql = "SELECT students.stu_id_school,students.stu_name, students.stu_sex, classes.class_name, faculties.fal_name, reports.report_id, reports.report_content, reports.createdAt, reports.report_creater FROM reports LEFT JOIN students ON reports.report_stu_id = students.stu_id_school, faculties, classes WHERE classes.class_id = students.stu_id_class AND faculties.fal_id = classes.class_id_faculty ORDER BY reports.createdAt DESC";
+        Reports.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status: 'success',
+                    message: 'GET list_report thành công',
+                    list: results
+                })
+                return;
+            }
+        })
     }
 };
 

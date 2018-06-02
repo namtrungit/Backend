@@ -20,6 +20,9 @@ module.exports = {
     bs_service_id: {
       type: 'integer'
     },
+    bs_count: {
+      type: 'integer'
+    },
     bs_service_price: {
       type: 'integer'
     }
