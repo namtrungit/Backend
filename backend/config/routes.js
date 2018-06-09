@@ -168,6 +168,7 @@ module.exports.routes = {
   "PUT /reports/update-report": "ReportsController.update_report",
   "DELETE /reports/del-report": "ReportsController.del_report",
   "GET /reports/report": "ReportsController.list_report",
+  "POST /reports/find-report": "ReportsController.find_report",
 
   //ReportsDetails Controller
   "POST /rds/rd": "ReportdetailsController.add_rd",

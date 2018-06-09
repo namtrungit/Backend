@@ -9,7 +9,7 @@ module.exports = {
     add_news: function (req, res) {
         var new_title = req.param('new_title'),
             new_content = req.param('new_content'),
-            new_avatar = req.param('new_avatar'),
+            new_picture = req.param('new_picture'),
             new_creater = req.param('new_creater');
         if (!new_title || new_title === '') {
             res.json({
@@ -32,7 +32,7 @@ module.exports = {
             })
             return;
         }
-        News.create({ new_title, new_content, new_avatar, new_creater }).exec(function (err, created) {
+        News.create({ new_title, new_content, new_picture, new_creater }).exec(function (err, created) {
             if (err) {
                 console.log(err);
                 return;
@@ -66,7 +66,7 @@ module.exports = {
         var new_id = req.param('new_id'),
             new_title = req.param('new_title'),
             new_content = req.param('new_content'),
-            new_avatar = req.param('new_avatar');
+            new_picture = req.param('new_picture');
         if (!new_id || new_id === '' || new_id < 1) {
             res.json({
                 status: 'error',
@@ -88,20 +88,13 @@ module.exports = {
             })
             return;
         }
-        if (!new_avatar || new_avatar === '') {
-            res.json({
-                status: 'error',
-                message: 'new_avatar không hợp lệ'
-            })
-            return;
-        }
         News.findOne({ new_id }).exec(function (err, find) {
             if (err) {
                 console.log(err);
                 return;
             }
             if (find) {
-                News.update({ new_id }, { new_title, new_content, new_avatar }).exec(function (err, updated) {
+                News.update({ new_id }, { new_title, new_content, new_picture }).exec(function (err, updated) {
                     if (err) {
                         console.log(err);
                         return;
@@ -147,7 +140,7 @@ module.exports = {
         })
     },
     list_news: function (req, res) {
-        sql = "SELECT news.new_id, news.new_title, news.new_content, news.new_picture, DATE_FORMAT(news.createdAt, '%d/%m/%Y') as createdAt FROM news ORDER BY createdAt DESC";
+        sql = "SELECT news.new_id, news.new_title, news.new_content, news.new_picture, DATE_FORMAT(news.createdAt, '%d/%m/%Y') as createdAt, news.new_creater FROM news ORDER BY createdAt DESC";
         News.query(sql, function (err, results) {
             if (err) {
                 console.log(err);

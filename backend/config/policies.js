@@ -85,7 +85,8 @@ module.exports.policies = {
   },
   'NewsController': {
     '*': 'auth',
-    'news_upload_picture': true
+    'news_upload_picture': true,
+    'list_news':true
   },
   'ReportsController': {
     '*': 'auth',

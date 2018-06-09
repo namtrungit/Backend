@@ -212,6 +212,43 @@ module.exports = {
                 return;
             }
         })
+    },
+    find_report: function (req, res) {
+        var report = req.param('report'),
+            stu = req.param('stu');
+        if (report && stu) {
+            // console.log(1);
+            sql = "SELECT students.stu_id_school,students.stu_name, students.stu_sex, classes.class_name, faculties.fal_name, reports.report_id, reports.report_content, reports.createdAt, reports.report_creater FROM reports LEFT JOIN students ON reports.report_stu_id = students.stu_id_school, faculties, classes WHERE classes.class_id = students.stu_id_class AND faculties.fal_id = classes.class_id_faculty  AND  reports.report_id = '" + report + "' AND  reports.report_stu_id = " + stu + "";
+        }
+        if (report && !stu) {
+            // console.log(2);
+            sql = "SELECT students.stu_id_school,students.stu_name, students.stu_sex, classes.class_name, faculties.fal_name, reports.report_id, reports.report_content, reports.createdAt, reports.report_creater FROM reports LEFT JOIN students ON reports.report_stu_id = students.stu_id_school, faculties, classes WHERE classes.class_id = students.stu_id_class AND faculties.fal_id = classes.class_id_faculty  AND  reports.report_id = '" + report + "' ";
+        }
+        if (!report && stu) {
+            // console.log(3);
+            sql = "SELECT students.stu_id_school,students.stu_name, students.stu_sex, classes.class_name, faculties.fal_name, reports.report_id, reports.report_content, reports.createdAt, reports.report_creater FROM reports LEFT JOIN students ON reports.report_stu_id = students.stu_id_school, faculties, classes WHERE classes.class_id = students.stu_id_class AND faculties.fal_id = classes.class_id_faculty  AND  reports.report_stu_id = " + stu + "";
+        }
+        if (!report && !stu) {
+            res.json({
+                status: 'warning',
+                message: 'Bạn chưa nhập thông tin để tìm kiếm'
+            })
+            return;
+        }
+        Reports.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status:'success',
+                    message:'GET thành công',
+                    list: results
+                })
+                return;
+            }
+        })
     }
 };
 
