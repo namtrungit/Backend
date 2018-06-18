@@ -74,7 +74,7 @@ module.exports.policies = {
     '*': 'auth',
   },
   'BillservicedetailsController': {
-    '*' : 'auth'
+    '*': 'auth'
   },
   'RulesController': {
     '*': 'auth',
@@ -86,7 +86,9 @@ module.exports.policies = {
   'NewsController': {
     '*': 'auth',
     'news_upload_picture': true,
-    'list_news':true
+    'list_news': true,
+    'get_news': true,
+    'get_news_index': true
   },
   'ReportsController': {
     '*': 'auth',

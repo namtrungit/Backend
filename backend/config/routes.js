@@ -105,6 +105,7 @@ module.exports.routes = {
   "POST /contracts/find-contract": "ContractsController.find_contract",
   "POST /contracts/find-contract-old": "ContractsController.find_contract_old",
   // "POST /test/test": "ContractsController.add_test",
+  // "POST /test/test": "ContractsController.test_update",
 
   //Register Controller
   "POST /registers/register": "RegistersController.add_register",
@@ -162,6 +163,8 @@ module.exports.routes = {
   "DELETE /news/del-news": "NewsController.del_news",
   "PUT /news/update-news": "NewsController.update_news",
   "GET /news/news": "NewsController.list_news",
+  "GET /news/get-news": "NewsController.get_news",
+  "GET /news/list-news": "NewsController.get_news_index",
 
   //ReportsController
   "POST /reports/report": "ReportsController.add_report",

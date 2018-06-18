@@ -42,7 +42,8 @@ module.exports = {
       enum: ['male', 'female']
     },
     user_positon: {
-      type: 'integer'
+      type: 'string',
+      size: 10
     }
   },
    //Ham nay chay truoc khi du lieu duoc INSERT vao DB

@@ -144,20 +144,37 @@ module.exports = {
                     return;
                 }
                 if (find) {
-                    Rooms.update({ room_id }, { room_name: update_room_name, room_max }).exec(function (err, updated) {
+                    room = find.room_name;
+                    sql = "SELECT COUNT(rooms.room_name) AS sl FROM contracts LEFT JOIN rooms ON rooms.room_name = contracts.contract_room_name WHERE rooms.room_name = '" + room + "' AND contracts.contract_date_end >= CURRENT_DATE";
+                    Rooms.query(sql, function (err, results) {
                         if (err) {
-                            res.json({
-                                status: 'warning',
-                                message: 'Tên phòng ' + update_room_name + ' đã có trong csdl'
-                            })
+                            console.log(err);
                             return;
                         }
-                        if (updated) {
+                        if (results[0].sl > room_max) {
+                            console.log('Số lượng thay đổi không hợp lệ');
                             res.json({
-                                status: 'success',
-                                message: 'Cập nhật thành công',
+                                status: 'warning',
+                                message: 'Số lượng sinh viên hiện tại của phòng ' + room + ' là ' + '' + results[0].sl
                             })
-                            return;
+                        }
+                        if (results[0].sl <= room_max) {
+                            Rooms.update({ room_id }, { room_name: update_room_name, room_max }).exec(function (err, updated) {
+                                if (err) {
+                                    res.json({
+                                        status: 'warning',
+                                        message: 'Tên phòng ' + update_room_name + ' đã có trong csdl'
+                                    })
+                                    return;
+                                }
+                                if (updated) {
+                                    res.json({
+                                        status: 'success',
+                                        message: 'Cập nhật thành công',
+                                    })
+                                    return;
+                                }
+                            })
                         }
                     })
                 }
@@ -171,17 +188,34 @@ module.exports = {
                     return;
                 }
                 if (find) {
-                    Rooms.update({ room_id }, { room_max }).exec(function (err, updated) {
+                    room = find.room_name;
+                    sql = "SELECT COUNT(rooms.room_name) AS sl FROM contracts LEFT JOIN rooms ON rooms.room_name = contracts.contract_room_name WHERE rooms.room_name = '" + room + "' AND contracts.contract_date_end >= CURRENT_DATE";
+                    Rooms.query(sql, function (err, results) {
                         if (err) {
                             console.log(err);
                             return;
                         }
-                        if (updated) {
+                        if (results[0].sl > room_max) {
+                            console.log('Số lượng thay đổi không hợp lệ');
                             res.json({
-                                status: 'success',
-                                message: 'Cập nhật thành công'
+                                status: 'warning',
+                                message: 'Số lượng sinh viên hiện tại của phòng ' + room + ' là ' + '' + results[0].sl
                             })
-                            return;
+                        }
+                        if (results[0].sl <= room_max) {
+                            Rooms.update({ room_id }, { room_max }).exec(function (err, updated) {
+                                if (err) {
+                                    console.log(err);
+                                    return;
+                                }
+                                if (updated) {
+                                    res.json({
+                                        status: 'success',
+                                        message: 'Cập nhật thành công'
+                                    })
+                                    return;
+                                }
+                            })
                         }
                     })
                 }

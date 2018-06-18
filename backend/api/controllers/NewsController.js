@@ -155,6 +155,40 @@ module.exports = {
                 return;
             }
         })
+    },
+    get_news: function (req, res) {
+        var id = req.param('id');
+        News.findOne({ new_id: id }).exec(function (err, find) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (find) {
+                res.json({
+                    status: 'success',
+                    message: 'GET news thành công',
+                    news: find
+                })
+                return;
+            }
+        })
+    },
+    get_news_index: function (req, res) {
+        sql = "SELECT news.new_id, news.new_title, news.new_content, news.new_picture, news.createdAt, news.new_creater FROM news ORDER BY createdAt DESC LIMIT 4";
+        News.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return
+            }
+            if (results) {
+                res.json({
+                    status: 'success',
+                    message: 'GET list_news thành công',
+                    list: results
+                })
+                return;
+            }
+        })
     }
 };
 
