@@ -13,24 +13,20 @@ module.exports = {
       primaryKey: true,
       autoIncrement: true
     },
-    service_name:{
-      type:'string',
-      size:50
+    service_name: {
+      type: 'string',
+      size: 50
     },
     service_price: {
-      type:'integer',
-    },
-    service_date: {
-      type:'date',
+      type: 'integer',
     },
     service_content: {
       type: 'string',
-      size:200
+      size: 200
     },
-    service_status: {
+    service_unit: {
       type: 'string',
-      size:10,
-      enum: ['disable','enable']
+      size: 20
     }
   }
 };

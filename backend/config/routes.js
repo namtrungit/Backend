@@ -156,6 +156,7 @@ module.exports.routes = {
   "PUT /elecs/check-enable": "ElecsController.check_enable",
   "POST /elecs/find-elec-enable": "ElecsController.find_elec_enable",
   "POST /elecs/find-elec-disable": "ElecsController.find_elec_disable",
+  "POST /elecs/list-elec": "ElecsController.get_list_elec_home",
 
   //News Controller
   "POST /news/news": "NewsController.add_news",

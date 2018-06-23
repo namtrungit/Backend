@@ -9,7 +9,7 @@ module.exports = {
     add_service: function (req, res) {
         var service_name = req.param('service_name'),
             service_price = req.param('service_price'),
-            service_date = req.param('service_date'),
+            service_unit = req.param('service_unit'),
             service_content = req.param('service_content');
         if (!service_name || service_name === '') {
             res.json({
@@ -25,10 +25,10 @@ module.exports = {
             })
             return;
         }
-        if (!service_date || service_date === '') {
+        if (!service_unit || service_unit === '') {
             res.json({
                 status: 'error',
-                message: 'service_date không hợp lệ'
+                message: 'service_unit không hợp lệ'
             })
             return;
         }
@@ -39,9 +39,7 @@ module.exports = {
             })
             return;
         }
-        var redate = service_date.split('/')[2] + "-" + service_date.split('/')[1] + "-" + service_date.split('/')[0];
-        service_date = moment(redate).format('YYYY-MM-DD');
-        Services.create({ service_name, service_price, service_date, service_content, service_status: 'disable' }).exec(function (err, created) {
+        Services.create({ service_name, service_price, service_unit, service_content}).exec(function (err, created) {
             if (err) {
                 console.log(err);
                 return;
@@ -85,7 +83,7 @@ module.exports = {
         })
     },
     list_service: function (req, res) {
-        var sql = "SELECT services.service_id, services.service_name,services.service_price,DATE_FORMAT(services.service_date,'%d/%m/%Y') AS service_date,services.service_content, DATE_FORMAT(services.createdAt,'%d/%m/%Y') AS createdAt, services.service_status FROM services";
+        var sql = "SELECT services.service_id, services.service_name,services.service_price,services.service_unit,services.service_content FROM services";
         Services.query(sql, function (err, results) {
             if (err) {
                 console.log(err);
@@ -102,7 +100,7 @@ module.exports = {
         })
     },
     list_service_enable: function (req, res) {
-        var sql = "SELECT services.service_id, services.service_name,services.service_price,DATE_FORMAT(services.service_date,'%d/%m/%Y') AS service_date,services.service_content, DATE_FORMAT(services.createdAt,'%d/%m/%Y') AS createdAt, services.service_status FROM services WHERE services.service_status = 'enable'";
+        var sql = "SELECT services.service_id, services.service_name,services.service_price,services.service_unit,services.service_content FROM services";
         Services.query(sql, function (err, results) {
             if (err) {
                 console.log(err);
@@ -139,9 +137,8 @@ module.exports = {
         var service_id = req.param('service_id'),
             service_name = req.param('service_name'),
             service_price = req.param('service_price'),
-            service_date = req.param('service_date'),
-            service_content = req.param('service_content'),
-            service_status = req.param('service_status');
+            service_unit = req.param('service_unit'),
+            service_content = req.param('service_content');
         if (!service_id || service_id === '' || service_id < 1) {
             res.json({
                 status: 'error',
@@ -163,10 +160,10 @@ module.exports = {
             })
             return;
         }
-        if (!service_date || service_date === '') {
+        if (!service_unit || service_unit === '') {
             res.json({
                 status: 'error',
-                message: 'service_date không hợp lệ'
+                message: 'service_unit không hợp lệ'
             })
             return;
         }
@@ -177,22 +174,13 @@ module.exports = {
             })
             return;
         }
-        if (!service_status || service_status === '') {
-            res.json({
-                status: 'error',
-                message: 'service_status không hợp lệ'
-            })
-            return;
-        }
-        var redate = service_date.split('/')[2] + "-" + service_date.split('/')[1] + "-" + service_date.split('/')[0];
-        service_date = moment(redate).format('YYYY-MM-DD');
         Services.findOne({ service_id }).exec(function (err, find) {
             if (err) {
                 console.log(err);
                 return;
             }
             if (find) {
-                Services.update({ service_id }, { service_name, service_price, service_date, service_content, service_status }).exec(function (err, updated) {
+                Services.update({ service_id }, { service_name, service_price, service_unit, service_content }).exec(function (err, updated) {
                     if (err) {
                         console.log(err);
                         return;

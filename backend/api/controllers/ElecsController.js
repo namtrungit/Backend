@@ -211,6 +211,37 @@ module.exports = {
             }
         })
     },
+    get_list_elec_home: function (req, res) {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+        month = mm + '-' + yyyy;
+        // console.log(month);
+        var area_id = req.param('area_id');
+        if (!area_id || area_id === '' || area_id < 1) {
+            res.json({
+                status: 'warning',
+                message: 'Ban chưa chọn khu để tìm kiếm'
+            })
+            return;
+        }
+        sql = "SELECT elecs.elec_id, elecs.elec_room, elecs.elec_month, elecs.elec_amount, elecs.elec_total, elecs.elec_creater, elecs.elec_status, DATE_FORMAT(elecs.createdAt, '%d/%m/%Y') as createdAt, areas.area_sympol as createdAt FROM elecs, rooms, areas WHERE elecs.elec_month = '06-2018' AND elecs.elec_room = rooms.room_name AND rooms.room_id_area = areas.area_id AND areas.area_id = " + area_id + " ORDER by elecs.elec_room ASC";
+        Elecs.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status:'success',
+                    message:'GET list_elec thành công',
+                    list: results
+                })
+                return;
+            }
+        })
+    },
     get_elec_month: function (req, res) {
         var month = req.param('month');
         // console.log(month);

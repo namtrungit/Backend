@@ -43,6 +43,7 @@ module.exports.policies = {
   },
   'AreasController': {
     '*': 'auth',
+    'get_area': true
   },
   'PricesController': {
     '*': 'auth',
@@ -82,6 +83,7 @@ module.exports.policies = {
   },
   'ElecsController': {
     '*': 'auth',
+    'get_list_elec_home': true,
   },
   'NewsController': {
     '*': 'auth',

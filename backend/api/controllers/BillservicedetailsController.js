@@ -128,7 +128,7 @@ module.exports = {
             })
             return;
         }
-        sql = "SELECT billservicedetails.bs_id, billservicedetails.bs_bill_id, billservicedetails.bs_service_id, services.service_name, billservicedetails.bs_count, billservicedetails.bs_service_price, billservicedetails.bs_total FROM billservicedetails LEFT JOIN bills on billservicedetails.bs_bill_id = bills.bill_id LEFT JOIN services ON billservicedetails.bs_service_id = services.service_id WHERE billservicedetails.bs_bill_id= '" + bs_bill_id + "'";
+        sql = "SELECT billservicedetails.bs_id, billservicedetails.bs_bill_id, billservicedetails.bs_service_id, services.service_name, services.service_unit, billservicedetails.bs_count, billservicedetails.bs_service_price, billservicedetails.bs_total FROM billservicedetails LEFT JOIN bills on billservicedetails.bs_bill_id = bills.bill_id LEFT JOIN services ON billservicedetails.bs_service_id = services.service_id WHERE billservicedetails.bs_bill_id= '" + bs_bill_id + "'";
         Billservicedetails.query(sql, function (err, results) {
             if (err) {
                 console.log(err);
