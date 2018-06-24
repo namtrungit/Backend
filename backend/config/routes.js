@@ -68,12 +68,15 @@ module.exports.routes = {
   "POST /rooms/find-room": "RoomsController.find_room",
   "POST /rooms/type-room": "RoomsController.find_room_s",
   "PUT /rooms/update-price": "RoomsController.update_price",
+  "GET /rooms/empty-room-quantity": "RoomsController.empty_room_quantity",
+  "GET /rooms/quantity-room": "RoomsController.room_quantity",
 
   //Areas Controller
   "POST /areas/area": "AreasController.add_area",
   "DELETE /areas/del-area": "AreasController.del_area",
   "GET /areas/area": "AreasController.get_area",
   "PUT /areas/update-area": "AreasController.update_area",
+  "GET /areas/quantity-area": "AreasController.quantity_area",
 
   //Classes Controller
   "POST /classes/class": "ClassesController.add_class",
@@ -104,6 +107,8 @@ module.exports.routes = {
   "POST /contracts/chart-contract": "ContractsController.chart_contract",
   "POST /contracts/find-contract": "ContractsController.find_contract",
   "POST /contracts/find-contract-old": "ContractsController.find_contract_old",
+  "GET /contracts/chart-contract": "ContractsController.chart_contract",
+  "GET /contracts/current-contract": "ContractsController.current_contract",
   // "POST /test/test": "ContractsController.add_test",
   // "POST /test/test": "ContractsController.test_update",
 
@@ -131,6 +136,7 @@ module.exports.routes = {
   "PUT /bills/new-bill": "BillsController.bill_new",
   "PUT /bills/total-bill": "BillsController.total_bill",
   "POST /bills/find-bill": "BillsController.find_bill",
+  "GET /bills/chart-bill": "BillsController.chart_bill",
 
   //BillserviceDetaills Controller
   "POST /bss/bs": "Billservicedetails.add_bs",
@@ -173,6 +179,7 @@ module.exports.routes = {
   "DELETE /reports/del-report": "ReportsController.del_report",
   "GET /reports/report": "ReportsController.list_report",
   "POST /reports/find-report": "ReportsController.find_report",
+  "GET /reports/chart-report": "ReportsController.report_chart",
 
   //ReportsDetails Controller
   "POST /rds/rd": "ReportdetailsController.add_rd",

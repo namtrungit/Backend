@@ -883,7 +883,7 @@ module.exports = {
                             return;
                         }
                         if (find) {
-                            if (find.stu_id_school === current_stu){
+                            if (find.stu_id_school === current_stu) {
                                 console.log('Mã sinh viên không thay đổi');
                                 Rooms.findOne({ room_name: contract_room_name }).exec(function (err, find) {
                                     if (err) {
@@ -1068,7 +1068,7 @@ module.exports = {
                                     }
                                 })
                             }
-                            if(find.stu_id_school != current_stu){
+                            if (find.stu_id_school != current_stu) {
                                 console.log('Mã sinh viên thay đổi');
                                 sql = "SELECT COUNT(students.stu_id_school) as slhd FROM contracts LEFT JOIN students ON contracts.contract_id_stu_school = students.stu_id_school WHERE students.stu_id_school = " + contract_id_stu_school + " AND contracts.contract_date_end > CURRENT_DATE";
                                 Students.query(sql, function (err, results) {
@@ -1282,6 +1282,47 @@ module.exports = {
                 }
             })
         }
+    },
+    chart_contract: function (req, res) {
+        var year = req.param('year');
+        if (!year || year === '' || year < 1 || year.length > 4) {
+            res.json({
+                status: 'warning',
+                message: 'Năm bạn nhập vào không hợp lệ'
+            })
+            return;
+        }
+        var sql = "SELECT  MONTH(contracts.createdAt) as label, SUM(contracts.contract_total) as value FROM contracts WHERE YEAR(contracts.createdAt) = " + year + " GROUP BY label";
+        Contracts.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status: 'success',
+                    message: 'GET chart_contract thành công',
+                    list: results
+                })
+            }
+        })
+    },
+    current_contract: function (req, res) {
+        var sql = "SELECT COUNT(contracts.contract_id) as total FROM contracts WHERE contracts.contract_date_end >= CURRENT_DATE()"
+        Contracts.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status:'success',
+                    message:'Get current_contract thành công',
+                    total: results
+                })
+                return;
+            }
+        })
     }
 };
 

@@ -137,6 +137,23 @@ module.exports = {
                 return;
             }
         })
+    },
+    quantity_area: function (req, res) {
+        var sql = "SELECT COUNT(areas.area_id) as quantity_area FROM areas";
+        Areas.query(sql, function (err, resullt) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (resullt) {
+                res.json({
+                    status:'success',
+                    message:'GET quantity_area thành công',
+                    quantity: resullt
+                })
+                return;
+            }
+        })
     }
 };
 

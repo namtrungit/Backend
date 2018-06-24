@@ -242,11 +242,35 @@ module.exports = {
             }
             if (results) {
                 res.json({
-                    status:'success',
-                    message:'GET thành công',
+                    status: 'success',
+                    message: 'GET thành công',
                     list: results
                 })
                 return;
+            }
+        })
+    },
+    report_chart: function (req, res) {
+        var year = req.param('year');
+        if (!year || year === '' || year < 1 || year.length > 4) {
+            res.json({
+                status: 'warning',
+                message: 'Năm bạn nhập vào không hợp lệ'
+            })
+            return;
+        }
+        var sql = "SELECT  MONTH(reports.createdAt) as label, COUNT(reports.report_id) as value FROM reports WHERE YEAR(reports.createdAt) = "+year+" GROUP BY label";
+        Reports.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status: 'success',
+                    message: 'GET chart_report thành công',
+                    list: results
+                })
             }
         })
     }

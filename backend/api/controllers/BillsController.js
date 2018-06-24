@@ -305,6 +305,30 @@ module.exports = {
                 return;
             }
         })
+    },
+    chart_bill: function (req, res) {
+        var year = req.param('year');
+        if (!year || year === '' || year < 1 || year.length > 4) {
+            res.json({
+                status: 'warning',
+                message: 'Năm bạn nhập vào không hợp lệ'
+            })
+            return;
+        }
+        var sql = "SELECT  MONTH(bills.createdAt) as label, SUM(bills.bill_total) as value FROM bills WHERE YEAR(bills.createdAt) = " + year + " GROUP BY label";
+        Bills.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status: 'success',
+                    message: 'GET chart_service thành công',
+                    list: results
+                })
+            }
+        })
     }
 };
 

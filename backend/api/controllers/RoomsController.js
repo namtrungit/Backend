@@ -386,6 +386,40 @@ module.exports = {
             })
             return;
         })
+    },
+    empty_room_quantity: function (req, res) {
+        var sql = "SELECT COUNT(rooms.room_name) as empty FROM rooms WHERE rooms.room_name NOT IN (SELECT rooms.room_name FROM rooms, contracts WHERE rooms.room_name = contracts.contract_room_name AND contracts.createdAt <= CURRENT_DATE())";
+        Rooms.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status: 'success',
+                    message: 'GET empty_room_quantity thành công',
+                    quantity: results
+                })
+                return;
+            }
+        })
+    },
+    room_quantity: function (req, res) {
+        var sql = "SELECT COUNT(rooms.room_id) as quantity_room FROM rooms"
+        Rooms.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status:'success',
+                    message:'GET room_quantity thành công',
+                    room_quantity: results
+                })
+                return;
+            }
+        })
     }
 };
 
