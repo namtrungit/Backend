@@ -317,82 +317,69 @@ module.exports = {
         }
     },
     stu_del: function (req, res) {
-        var stu_id = req.param('stu_id'),
-            room_name = req.param('room_name'), room_empty;
-        if (!stu_id || stu_id === "" || stu_id < 1) {
+        var stu_id_school = req.param('stu_id_school');
+        if (!stu_id_school || stu_id_school === "" || stu_id_school < 1) {
             return res.json({
                 status: 'error',
-                message: 'stu_id không hợp lệ'
+                message: 'stu_id_school không hợp lệ'
             })
         }
-        if (room_name === '') {
-            // Không có room_id
-            console.log('Không có room_id')
-            // return;
-            Students.findOne({ stu_id }).exec(function (err, find) {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                if (find) {
-                    Students.destroy({ stu_id }).exec(function (err) {
-                        if (err) {
-                            console.log(err);
-                            return;
-                        }
-                        res.json({
-                            status: 'success',
-                            message: 'Xóa sinh viên thành công'
-                        })
-                    })
-                }
-            })
-        }
-        else {
-            // Có room_id
-            console.log('Có room_id');
-            console.log(room_name);
-            // return;
-            Rooms.findOne({ room_name }).exec(function (err, find) {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                if (find) {
-                    room_empty = find.room_empty;
-                    room_empty++;
-                    console.log(room_empty);
-                    Students.findOne({ stu_id }).exec(function (err, find) {
-                        if (err) {
-                            console.log(err);
-                            return;
-                        }
-                        if (find) {
-                            Students.destroy({ stu_id }).exec(function (err) {
+        Students.findOne({ stu_id_school }).exec(function (err, find) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (find) {
+                Contracts.findOne({ contract_id_stu_school: stu_id_school }).exec(function (err, find) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    if (find) {
+                        console.log('Sinh viên có hợp đồng');
+                        // return;
+                        Contracts.destroy({ contract_id_stu_school: stu_id_school }).exec(function (err) {
+                            if (err) {
+                                console.log(err);
+                                return;
+                            }
+                            Students.destroy({ stu_id_school }).exec(function (err) {
                                 if (err) {
                                     console.log(err);
                                     return;
                                 }
                                 res.json({
                                     status: 'success',
-                                    message: 'Xóa sinh viên thành công'
+                                    message: 'Xóa thành công'
                                 })
-                                Rooms.update({ room_name }, { room_empty }).exec(function (err, updated) {
-                                    if (err) {
-                                        console.log(err);
-                                        return;
-                                    }
-                                    if (updated) {
-                                        console.log('Cập nhật sl phòng thành công')
-                                    }
-                                })
+                                return;
                             })
-                        }
-                    })
-                }
-            })
-        }
-
+                        })
+                    }
+                    else {
+                        console.log('Sinh viên chưa có hợp đồng');
+                        // return;
+                        Students.destroy({ stu_id_school }).exec(function (err) {
+                            if (err) {
+                                console.log(err);
+                                return;
+                            }
+                            res.json({
+                                status: 'success',
+                                message: 'Xóa thành công'
+                            })
+                            return;
+                        })
+                    }
+                })
+            }
+            else {
+                res.json({
+                    status: 'warning',
+                    message: 'stu_id_school không tồn tại'
+                })
+            }
+        })
     },
     stu_list: function (req, res) {
         var sql = "SELECT students.stu_id, students.stu_id_school,students.stu_name,students.stu_email,students.stu_sex,DATE_FORMAT(stu_birthday,'%d/%m/%Y') as stu_birthday,students.stu_id_class, students.stu_address,students.stu_phone,students.stu_dad_name,students.stu_dad_phone,students.stu_mom_name,students.stu_mom_phone,students.stu_avatar,faculties.fal_name,classes.class_name FROM students LEFT JOIN classes on students.stu_id_class = classes.class_id , faculties WHERE faculties.fal_id = classes.class_id_faculty"

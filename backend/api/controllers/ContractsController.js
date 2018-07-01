@@ -58,9 +58,9 @@ module.exports = {
             }
         })
     },
-    chart_contract: function (req, res) {
+    contract_end_in_month: function (req, res) {
         var month_year = req.param('month_year')
-        sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, areafloordetails.af_price FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school, areafloordetails WHERE rooms.room_id_area = areafloordetails.af_area_id and rooms.room_id_floor = areafloordetails.af_floor_id AND contracts.contract_date_end like '" + month_year + "%'";
+        sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end like '" + month_year + "%' ORDER BY contracts.createdAt DESC"
         Contracts.query(sql, function (err, results) {
             if (err) {
                 console.log(err);

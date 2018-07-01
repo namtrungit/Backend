@@ -8,9 +8,56 @@ var jwt = require('../services/jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var moment = require('moment');
 module.exports = {
+    user_update_position: function (req, res) {
+        var user_id = req.param('user_id'),
+            user_position = req.param('user_positon');
+        if (!user_id || user_id === '' || user_id < 1) {
+            res.json({
+                status: 'error',
+                message: 'user_id không hợp lệ'
+            })
+            return;
+        }
+        if (!user_position || user_position === '') {
+            res.json({
+                status: 'error',
+                message: 'user_positon không hợp lệ'
+            })
+            return;
+        }
+        Users.findOne({ user_id }).exec(function (err, find) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (find) {
+                Users.update({ user_id }, { user_positon: user_position }).exec(function (err, updated) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    if (updated) {
+                        res.json({
+                            status:'success',
+                            message:'Cập nhật thành công'
+                        })
+                        return;
+                    }
+                })
+            }
+            else {
+                res.json({
+                    status: 'warning',
+                    message: 'user_id không tồn tại'
+                })
+                return;
+            }
+        })
+    },
     user_create: function (req, res) {
         var user_email = req.param('user_email');
         var user_password = req.param('user_password');
+        var user_position = req.param('user_position');
         if (!user_email || user_email === '') {
             return res.json({
                 status: 'error',
@@ -21,6 +68,12 @@ module.exports = {
             return res.json({
                 status: 'error',
                 message: 'Bạn chưa nhập mật khẩu'
+            })
+        }
+        if (!user_position || user_position === "") {
+            return res.json({
+                status: 'error',
+                message: 'user_position không hợp lệ'
             })
         }
         Users.findOne({ user_email: user_email }).exec(function (err, find) {
@@ -34,17 +87,32 @@ module.exports = {
                 })
             }
             else {
-                Users.create({ user_email: user_email, user_password: user_password }).exec(function (err, created) {
+                Users.create({ user_email: user_email, user_password: user_password, user_positon: user_position }).exec(function (err, created) {
                     if (err) {
                         return console.log(err);
                     }
                     if (created) {
                         return res.json({
-                            status: 'Success',
+                            status: 'success',
                             message: 'Tạo tài khoản thành công',
                             user: created
                         })
                     }
+                })
+            }
+        })
+    },
+    list_user: function (req, res) {
+        Users.find().exec(function (err, find) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (find) {
+                res.json({
+                    status: 'success',
+                    message: 'GET list_user thành công',
+                    list: find
                 })
             }
         })
@@ -263,7 +331,7 @@ module.exports = {
                 message: 'ID không hợp lệ'
             })
         }
-        
+
         if (!old_password || old_password === '') {
             return res.json({
                 status: 'error',

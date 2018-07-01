@@ -34,9 +34,11 @@ module.exports.routes = {
 
   //USERS CONTROLLER
   "POST /users/user": "UsersController.user_create",
+  'GET /users/list-user': 'UsersController.list_user',
   'POST /users/login': 'UsersController.login',
   'GET /users/user': 'UsersController.user_profile',
   'PUT /users/user': 'UsersController.user_update',
+  'PUT /users/user-update-position': 'UsersController.user_update_position',
   'DELETE /users/user': 'UsersController.user_delete',
   'PUT /users/changepass': 'UsersController.user_change_password',
 
@@ -104,7 +106,7 @@ module.exports.routes = {
   "PUT /contracts/update-contract": "ContractsController.update_contract",
   "GET /contracts/list-contract": "ContractsController.list_contract",
   "GET /contracts/list-contract-old": "ContractsController.list_contract_old",
-  "POST /contracts/chart-contract": "ContractsController.chart_contract",
+  "POST /contracts/chart-contract": "ContractsController.contract_end_in_month",
   "POST /contracts/find-contract": "ContractsController.find_contract",
   "POST /contracts/find-contract-old": "ContractsController.find_contract_old",
   "GET /contracts/chart-contract": "ContractsController.chart_contract",
