@@ -237,22 +237,39 @@ module.exports = {
                 return;
             }
             if (find) {
-                Rooms.destroy({ room_id }).exec(function (err) {
+                sql = 'SELECT COUNT(rooms.room_name) as sl FROM rooms, contracts WHERE rooms.room_name = contracts.contract_room_name and contracts.contract_date_end >= CURRENT_DATE and rooms.room_id = ' + room_id + '';
+                Rooms.query(sql, function (err, results) {
                     if (err) {
                         console.log(err);
                         return;
                     }
-                    res.json({
-                        status: 'success',
-                        message: 'Xóa thành công'
-                    })
-                    return;
+                    if (results) {
+                        if (results[0].sl > 0) {
+                            res.json({
+                                status: 'warning',
+                                message: 'Phòng đang có sinh viên không thể xóa'
+                            })
+                        }
+                        else {
+                            Rooms.destroy({ room_id }).exec(function (err) {
+                                if (err) {
+                                    console.log(err);
+                                    return;
+                                }
+                                res.json({
+                                    status: 'success',
+                                    message: 'Xóa thành công'
+                                })
+                                return;
+                            })
+                        }
+                    }
                 })
             }
         })
     },
     list_room: function (req, res) {
-        var sql = 'SELECT o.room_id, o.room_name, o.room_max, areas.area_sympol, areas.area_id, o.room_floor, o.room_price ,(SELECT COUNT(rooms.room_name) FROM contracts LEFT JOIN rooms ON rooms.room_name = contracts.contract_room_name WHERE rooms.room_name = o.room_name  AND contracts.contract_date_end >= CURRENT_DATE) as room_currency FROM rooms o LEFT JOIN areas on o.room_id_area = areas.area_id';
+        var sql = 'SELECT o.room_id, o.room_name, o.room_max, areas.area_sympol, areas.area_id, o.room_floor, o.room_price ,(SELECT COUNT(rooms.room_name) FROM contracts LEFT JOIN rooms ON rooms.room_name = contracts.contract_room_name WHERE rooms.room_name = o.room_name  AND contracts.contract_date_end >= CURRENT_DATE) as room_currency FROM rooms o LEFT JOIN areas on o.room_id_area = areas.area_id ORDER BY o.room_name ASC';
         Rooms.query(sql, function (err, results) {
             if (err) {
                 console.log(err);
@@ -388,7 +405,7 @@ module.exports = {
         })
     },
     empty_room_quantity: function (req, res) {
-        var sql = "SELECT COUNT(rooms.room_name) as empty FROM rooms WHERE rooms.room_name NOT IN (SELECT rooms.room_name FROM rooms, contracts WHERE rooms.room_name = contracts.contract_room_name AND contracts.createdAt <= CURRENT_DATE())";
+        var sql = "SELECT COUNT(rooms.room_name) as empty FROM rooms WHERE rooms.room_name NOT IN (SELECT DISTINCT rooms.room_name FROM rooms, contracts WHERE rooms.room_name = contracts.contract_room_name AND contracts.contract_date_end >= CURRENT_DATE())";
         Rooms.query(sql, function (err, results) {
             if (err) {
                 console.log(err);
@@ -413,8 +430,8 @@ module.exports = {
             }
             if (results) {
                 res.json({
-                    status:'success',
-                    message:'GET room_quantity thành công',
+                    status: 'success',
+                    message: 'GET room_quantity thành công',
                     room_quantity: results
                 })
                 return;
