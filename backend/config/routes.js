@@ -111,6 +111,7 @@ module.exports.routes = {
   "POST /contracts/find-contract-old": "ContractsController.find_contract_old",
   "GET /contracts/chart-contract": "ContractsController.chart_contract",
   "GET /contracts/current-contract": "ContractsController.current_contract",
+  "PUT /contracts/disable-contract": "ContractsController.disable_contract",
   // "POST /test/test": "ContractsController.add_test",
   // "POST /test/test": "ContractsController.test_update",
 
@@ -165,6 +166,7 @@ module.exports.routes = {
   "POST /elecs/find-elec-enable": "ElecsController.find_elec_enable",
   "POST /elecs/find-elec-disable": "ElecsController.find_elec_disable",
   "POST /elecs/list-elec": "ElecsController.get_list_elec_home",
+  "GET /elecs/chart-elec": "ElecsController.chart_elec",
 
   //News Controller
   "POST /news/news": "NewsController.add_news",

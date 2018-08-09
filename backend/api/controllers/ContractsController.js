@@ -43,7 +43,7 @@ module.exports = {
         })
     },
     list_contract: function (req, res) {
-        var sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end >= CURRENT_DATE ORDER BY contracts.createdAt DESC";
+        var sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end >= CURRENT_DATE AND contracts.contract_status = 'enable' ORDER BY contracts.createdAt DESC";
         Contracts.query(sql, function (err, results) {
             if (err) {
                 console.log(err);
@@ -97,7 +97,7 @@ module.exports = {
         }
     },
     list_contract_old: function (req, res) {
-        sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end < CURRENT_DATE ORDER BY contracts.createdAt DESC";
+        sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end < CURRENT_DATE or contracts.contract_status = 'disable' ORDER BY contracts.createdAt DESC";
         Contracts.query(sql, function (err, results) {
             if (err) {
                 console.log(err);
@@ -114,19 +114,19 @@ module.exports = {
         })
     },
     find_contract_old: function (req, res) {
-        var stu_id = req.param('stu_id'),
+        var stu_name = req.param('stu_name'),
             contract_id = req.param('contract_id');
-        if (stu_id && contract_id) {
+        if (stu_name && contract_id) {
             console.log(1);
-            sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end < CURRENT_DATE AND students.stu_id_school = " + stu_id + " AND contracts.contract_id = '" + contract_id + "'";
+            sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end < CURRENT_DATE or contracts.contract_status = 'disable' AND students.stu_name like '%" + stu_name + "%' AND contracts.contract_id = '" + contract_id + "'";
         }
-        if (!stu_id && contract_id) {
-            sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end < CURRENT_DATE AND contracts.contract_id = '" + contract_id + "'";
+        if (!stu_name && contract_id) {
+            sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end < CURRENT_DATE or contracts.contract_status = 'disable' AND contracts.contract_id = '" + contract_id + "'";
         }
-        if (stu_id && !contract_id) {
-            sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end < CURRENT_DATE AND students.stu_id_school = " + stu_id + "";
+        if (stu_name && !contract_id) {
+            sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end < CURRENT_DATE or contracts.contract_status = 'disable' AND students.stu_name like '%" + stu_name + "%'";
         }
-        if (!stu_id && !contract_id) {
+        if (!stu_name && !contract_id) {
             res.json({
                 status: 'warning',
                 message: 'Bạn chưa nhập thông tin gì đề tìm kiếm'
@@ -149,21 +149,21 @@ module.exports = {
         })
     },
     find_contract: function (req, res) {
-        var stu_id = req.param('stu_id'),
+        var stu_name = req.param('stu_name'),
             contract_id = req.param('contract_id');
-        if (stu_id && contract_id) {
+        if (stu_name && contract_id) {
             console.log(1);
-            sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end > CURRENT_DATE AND students.stu_id_school = " + stu_id + " AND contracts.contract_id = '" + contract_id + "'";
+            sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end > CURRENT_DATE AND contracts.contract_status = 'enable' AND students.stu_name like '%" + stu_name + "%' AND contracts.contract_id = '" + contract_id + "'";
         }
-        if (!stu_id && contract_id) {
+        if (!stu_name && contract_id) {
             console.log(2);
-            sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end > CURRENT_DATE AND contracts.contract_id = '" + contract_id + "'";
+            sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end > CURRENT_DATE AND contracts.contract_status = 'enable' AND contracts.contract_id = '" + contract_id + "'";
         }
-        if (stu_id && !contract_id) {
+        if (stu_name && !contract_id) {
             console.log(3);
-            sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end > CURRENT_DATE AND students.stu_id_school = " + stu_id + "";
+            sql = "SELECT contracts.contract_id, contractregulations.recontract_id,DATE_FORMAT(contracts.contract_date_get_room,'%d/%m/%Y') as contract_date_get_room,DATE_FORMAT(contracts.contract_date_end,'%d/%m/%Y') as contract_date_end, contracts.contract_create, DATE_FORMAT(contracts.createdAt,'%d/%m/%Y') as contract_createdAt, students.stu_id_school, students.stu_name, rooms.room_name, contractregulations.recontract_name, contractregulations.recontract_limit, contractregulations.recontract_promotion, rooms.room_price, contracts.contract_total FROM contracts LEFT JOIN contractregulations on contracts.contract_id_recontract = contractregulations.recontract_id LEFT JOIN rooms on contracts.contract_room_name = rooms.room_name LEFT JOIN students on contracts.contract_id_stu_school = students.stu_id_school WHERE contracts.contract_date_end > CURRENT_DATE AND contracts.contract_status = 'enable' AND students.stu_name like '%" + stu_name + "%'";
         }
-        if (!stu_id && !contract_id) {
+        if (!stu_name && !contract_id) {
             res.json({
                 status: 'warning',
                 message: 'Bạn chưa nhập thông tin gì đề tìm kiếm'
@@ -264,7 +264,7 @@ module.exports = {
             }
             if (find) {
                 console.log("Mã sinh viên hợp lệ");
-                sql = "SELECT COUNT(students.stu_id_school) as slhd FROM contracts LEFT JOIN students ON contracts.contract_id_stu_school = students.stu_id_school WHERE students.stu_id_school = " + contract_id_stu_school + " AND contracts.contract_date_end >= CURRENT_DATE";
+                sql = "SELECT COUNT(students.stu_id_school) as slhd FROM contracts LEFT JOIN students ON contracts.contract_id_stu_school = students.stu_id_school WHERE students.stu_id_school = " + contract_id_stu_school + " AND contracts.contract_date_end >= CURRENT_DATE AND contracts.contract_status = 'enable'";
                 Students.query(sql, function (err, results) {
                     if (err) {
                         console.log(err);
@@ -281,7 +281,7 @@ module.exports = {
                                 console.log('Phòng hợp lệ')
                                 let price = find.room_price;
                                 let succhua = find.room_max;
-                                var sql = "SELECT COUNT(rooms.room_name) AS sl FROM contracts LEFT JOIN rooms ON rooms.room_name = contracts.contract_room_name WHERE rooms.room_name = '" + contract_room_name + "' AND contracts.contract_date_end >= CURRENT_DATE";
+                                var sql = "SELECT COUNT(rooms.room_name) AS sl FROM contracts LEFT JOIN rooms ON rooms.room_name = contracts.contract_room_name WHERE rooms.room_name = '" + contract_room_name + "' AND contracts.contract_date_end >= CURRENT_DATE AND contracts.contract_status = 'enable'";
                                 Rooms.query(sql, function (err, results) {
                                     if (err) {
                                         console.log(err);
@@ -319,7 +319,8 @@ module.exports = {
                                                             contract_id_stu_school,
                                                             contract_id_recontract,
                                                             contract_create,
-                                                            contract_total
+                                                            contract_total,
+                                                            contract_status: 'enable'
                                                         }).exec(function (err, created) {
                                                             if (err) {
                                                                 console.log(err);
@@ -1316,9 +1317,49 @@ module.exports = {
             }
             if (results) {
                 res.json({
-                    status:'success',
-                    message:'Get current_contract thành công',
+                    status: 'success',
+                    message: 'Get current_contract thành công',
                     total: results
+                })
+                return;
+            }
+        })
+    },
+    disable_contract: function (req, res) {
+        var contract_id = req.param('contract_id');
+        if (!contract_id || contract_id === '') {
+            res.json({
+                status: 'error',
+                message: 'contract_id không hợp lệ'
+            })
+            return;
+        }
+        // console.log(1);
+        Contracts.findOne({ contract_id }).exec(function (err, find) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (find) {
+                // console.log(1);
+                Contracts.update({ contract_id }, { contract_status: 'disable' }).exec(function (err, updated) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    if (updated) {
+                        res.json({
+                            status:'success',
+                            message:'Hủy hợp đồng thành công',
+                        });
+                        return;
+                    }
+                })
+            }
+            else{
+                res.json({
+                    status:'warning',
+                    message:'ID hợp đồng '+contract_id+' không tồn tại trong cơ sở dữ liệu'
                 })
                 return;
             }

@@ -35,6 +35,11 @@ module.exports = {
     },
     contract_total: {
       type: 'integer'
+    },
+    contract_status:{
+      type:'string',
+      enum: ['enable', 'disable'],
+      size: 10
     }
   }
 };

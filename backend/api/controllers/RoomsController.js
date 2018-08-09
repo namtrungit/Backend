@@ -269,7 +269,7 @@ module.exports = {
         })
     },
     list_room: function (req, res) {
-        var sql = 'SELECT o.room_id, o.room_name, o.room_max, areas.area_sympol, areas.area_id, o.room_floor, o.room_price ,(SELECT COUNT(rooms.room_name) FROM contracts LEFT JOIN rooms ON rooms.room_name = contracts.contract_room_name WHERE rooms.room_name = o.room_name  AND contracts.contract_date_end >= CURRENT_DATE) as room_currency FROM rooms o LEFT JOIN areas on o.room_id_area = areas.area_id ORDER BY o.room_name ASC';
+        var sql = "SELECT o.room_id, o.room_name, o.room_max, areas.area_sympol, areas.area_id, o.room_floor, o.room_price ,(SELECT COUNT(rooms.room_name) FROM contracts LEFT JOIN rooms ON rooms.room_name = contracts.contract_room_name WHERE rooms.room_name = o.room_name  AND contracts.contract_date_end >= CURRENT_DATE AND contracts.contract_status = 'enable') as room_currency FROM rooms o LEFT JOIN areas on o.room_id_area = areas.area_id ORDER BY o.room_name ASC";
         Rooms.query(sql, function (err, results) {
             if (err) {
                 console.log(err);

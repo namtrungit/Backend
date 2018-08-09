@@ -219,7 +219,7 @@ module.exports = {
         if (mm < 10) {
             month = "0" + mm + '-' + yyyy;
         }
-        else{
+        else {
             month = mm + '-' + yyyy;
         }
         // console.log(month);
@@ -492,5 +492,29 @@ module.exports = {
             }
         })
     },
+    chart_elec: function (req, res) {
+        var year = req.param('year');
+        if (!year || year === '' || year < 1 || year.length > 4) {
+            res.json({
+                status: 'warning',
+                message: 'Năm bạn nhập vào không hợp lệ'
+            })
+            return;
+        }
+        var sql = "SELECT  MONTH(elecs.createdAt) as label, SUM(elecs.elec_total) as value FROM elecs WHERE YEAR(elecs.createdAt) = " + year + " AND elecs.elec_status = 'disable' GROUP BY label";
+        Elecs.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (results) {
+                res.json({
+                    status: 'success',
+                    message: 'GET chart_elec thành công',
+                    list: results
+                })
+            }
+        })
+    }
 };
 

@@ -398,7 +398,7 @@ module.exports = {
     },
     stu_list_in_room: function (req, res) {
         var room_name = req.param('room_name')
-        var sql = "SELECT students.stu_id_school, students.stu_name, students.stu_phone, students.stu_sex, DATE_FORMAT(students.stu_birthday, '%d/%m/%Y') as stu_birthday FROM contracts LEFT JOIN students ON contracts.contract_id_stu_school = students.stu_id_school LEFT JOIN rooms ON contracts.contract_room_name = rooms.room_name WHERE rooms.room_name = '" + room_name + "' AND contracts.contract_date_end >= CURRENT_DATE";
+        var sql = "SELECT students.stu_id_school, students.stu_name, students.stu_phone, students.stu_sex, DATE_FORMAT(students.stu_birthday, '%d/%m/%Y') as stu_birthday FROM contracts LEFT JOIN students ON contracts.contract_id_stu_school = students.stu_id_school LEFT JOIN rooms ON contracts.contract_room_name = rooms.room_name WHERE rooms.room_name = '" + room_name + "' AND contracts.contract_date_end >= CURRENT_DATE AND contracts.contract_status = 'enable'";
         Students.query(sql, function (err, results) {
             if (err) {
                 return console.log(err);
